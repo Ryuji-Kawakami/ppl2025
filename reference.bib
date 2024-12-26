@@ -1,0 +1,503 @@
+
+
+
+@inproceedings{monae,
+  author    = {Affeldt, Reynald
+               and Nowak, David
+               and Saikawa, Takafumi},
+  editor    = {Hutton, Graham},
+  title     = {A Hierarchy of Monadic Effects for Program Verification Using Equational Reasoning},
+  booktitle = {Mathematics of Program Construction},
+  year      = {2019},
+  publisher = {Springer International Publishing},
+  address   = {Cham},
+  pages     = {226--254},
+  abstract  = {One can perform equational reasoning about computational effects with a purely functional programming language thanks to monads. Even though equational reasoning for effectful programs is desirable, it is not yet mainstream. This is partly because it is difficult to maintain pencil-and-paper proofs of large examples. We propose a formalization of a hierarchy of effects using monads in the Coq proof assistant that makes equational reasoning practical. Our main idea is to formalize the hierarchy of effects and algebraic laws like it is done when formalizing hierarchy of traditional algebras. We can then take advantage of the sophisticated rewriting capabilities of Coq to achieve concise proofs of programs. We also show how to ensure the consistency of our hierarchy by providing rigorous models. We explain the various techniques we use to formalize a rich hierarchy of effects (with nondeterminism, state, probability, and more), to mechanize numerous examples from the literature, and we furthermore discuss extensions and new applications.},
+  isbn      = {978-3-030-33636-3}
+}
+
+@article{lmcs:2265,
+  title    = {{General Recursion via Coinductive Types}},
+  author   = {Venanzio Capretta},
+  url      = {https://lmcs.episciences.org/2265},
+  doi      = {10.2168/LMCS-1(2:1)2005},
+  journal  = {{Logical Methods in Computer Science}},
+  volume   = {{Volume 1, Issue 2}},
+  year     = {2005},
+  month    = Jul,
+  keywords = {Computer Science - Logic in Computer Science ; F.3.1}
+}
+@inproceedings{cohen:hal-02478907,
+  title       = {{Hierarchy Builder: algebraic hierarchies made easy in Coq with Elpi}},
+  author      = {Cohen, Cyril and Sakaguchi, Kazuhiko and Tassi, Enrico},
+  url         = {https://inria.hal.science/hal-02478907},
+  booktitle   = {{FSCD 2020 - 5th International Conference on Formal Structures for Computation and Deduction}},
+  address     = {Paris, France},
+  number      = {167},
+  pages       = {34:1--34:21},
+  year        = {2020},
+  month       = Jun,
+  doi         = {10.4230/LIPIcs.FSCD.2020.34},
+  keywords    = {$\lambda$Prolog ; Elpi ; Metaprogramming ; Packed Classes ; Coq ; Algebraic Hierarchy},
+  pdf         = {https://inria.hal.science/hal-02478907v6/file/LIPIcs-FSCD-2020-34.pdf},
+  hal_id      = {hal-02478907},
+  hal_version = {v6}
+}
+@article{PIROG2013309,
+  title    = {Monads for Behaviour},
+  journal  = {Electronic Notes in Theoretical Computer Science},
+  volume   = {298},
+  pages    = {309-324},
+  year     = {2013},
+  note     = {Proceedings of the Twenty-ninth Conference on the Mathematical Foundations of Programming Semantics, MFPS XXIX},
+  issn     = {1571-0661},
+  doi      = {https://doi.org/10.1016/j.entcs.2013.09.019},
+  url      = {https://www.sciencedirect.com/science/article/pii/S1571066113000650},
+  author   = {Maciej Piróg and Jeremy Gibbons},
+  keywords = {completely iterative monads, effects, tracing, resumptions},
+  abstract = {The monads used to model effectful computations traditionally concentrate on the ‘destination’—the final results of the program. However, sometimes we are also interested in the ‘journey’—the intermediate course of a computation—especially when reasoning about non-terminating interactive systems. In this article we claim that a necessary property of a monad for it to be able to describe the behaviour of a program is complete iterativity. We show how an ordinary monad can be modified to disclose more about its internal computational behaviour, by applying an associated transformer to a completely iterative monad. To illustrate this, we introduce two new constructions: a coinductive cousin of Cenciarelli and Moggiʼs generalised resumption transformer, and States—a State-like monad that accumulates the intermediate states.}
+}
+
+@misc{affeldt2023practicalformalizationmonadicequational,
+  title         = {A Practical Formalization of Monadic Equational Reasoning in Dependent-type Theory},
+  author        = {Reynald Affeldt and Jacques Garrigue and Takafumi Saikawa},
+  year          = {2023},
+  eprint        = {2312.06103},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.LO},
+  url           = {https://arxiv.org/abs/2312.06103}
+}
+@article{PIROG2014273,
+  title    = {The Coinductive Resumption Monad},
+  journal  = {Electronic Notes in Theoretical Computer Science},
+  volume   = {308},
+  pages    = {273-288},
+  year     = {2014},
+  note     = {Proceedings of the 30th Conference on the Mathematical Foundations of Programming Semantics (MFPS XXX)},
+  issn     = {1571-0661},
+  doi      = {https://doi.org/10.1016/j.entcs.2014.10.015},
+  url      = {https://www.sciencedirect.com/science/article/pii/S1571066114000826},
+  author   = {Maciej Piróg and Jeremy Gibbons},
+  keywords = {resumptions, completely iterative monads, coalgebra},
+  abstract = {Resumptions appear in many forms as a convenient abstraction, such as in semantics of concurrency and as a programming pattern. In this paper we introduce generalised resumptions in a category-theoretic, coalgebraic context and show their basic properties: they form a monad, they come equipped with a corecursion scheme in the sense of Adámek et al.'s notion of completely iterative monads (cims), and they enjoy a certain universal property, which specialises to the coproduct with a free cim in the category of cims.}
+}
+
+@article{GONCHAROV2015183,
+  title    = {Unguarded Recursion on Coinductive Resumptions},
+  journal  = {Electronic Notes in Theoretical Computer Science},
+  volume   = {319},
+  pages    = {183-198},
+  year     = {2015},
+  note     = {The 31st Conference on the Mathematical Foundations of Programming Semantics (MFPS XXXI).},
+  issn     = {1571-0661},
+  doi      = {https://doi.org/10.1016/j.entcs.2015.12.012},
+  url      = {https://www.sciencedirect.com/science/article/pii/S1571066115000791},
+  author   = {Sergey Goncharov and Christoph Rauch and Lutz Schröder},
+  keywords = {Recursion, coalgebra, coinduction, complete Elgot monad, resumptions},
+  abstract = {We study a model of side-effecting processes obtained by starting from a monad modelling base effects and adjoining free operations using a cofree coalgebra construction; one thus arrives at what one may think of as types of non-wellfounded side-effecting trees, generalizing the infinite resumption monad. Types of this kind have received some attention in the recent literature; in particular, it has been shown that they admit guarded iteration. Here, we show that they also admit unguarded iteration, i.e. form complete Elgot monads, provided that the underlying base effect supports unguarded iteration.}
+}
+
+@inproceedings{affeldt_et_al:LIPIcs.TYPES.2020.2,
+  author    = {Affeldt, Reynald and Nowak, David},
+  title     = {{Extending Equational Monadic Reasoning with Monad Transformers}},
+  booktitle = {26th International Conference on Types for Proofs and Programs (TYPES 2020)},
+  pages     = {2:1--2:21},
+  series    = {Leibniz International Proceedings in Informatics (LIPIcs)},
+  isbn      = {978-3-95977-182-5},
+  issn      = {1868-8969},
+  year      = {2021},
+  volume    = {188},
+  editor    = {de'Liguoro, Ugo and Berardi, Stefano and Altenkirch, Thorsten},
+  publisher = {Schloss Dagstuhl -- Leibniz-Zentrum f{\"u}r Informatik},
+  address   = {Dagstuhl, Germany},
+  url       = {https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.TYPES.2020.2},
+  urn       = {urn:nbn:de:0030-drops-138810},
+  doi       = {10.4230/LIPIcs.TYPES.2020.2},
+  annote    = {Keywords: monads, monad transformers, Coq, impredicativity, parametricity}
+}
+@article{ADAMEK20101306,
+  title    = {Equational properties of iterative monads},
+  journal  = {Information and Computation},
+  volume   = {208},
+  number   = {12},
+  pages    = {1306-1348},
+  year     = {2010},
+  note     = {Special Issue: International Workshop on Coalgebraic Methods in Computer Science (CMCS 2008)},
+  issn     = {0890-5401},
+  doi      = {https://doi.org/10.1016/j.ic.2009.10.006},
+  url      = {https://www.sciencedirect.com/science/article/pii/S0890540110000854},
+  author   = {Jiří Adámek and Stefan Milius and Jiří Velebil},
+  keywords = {Iterative monad, Iteration monad, Elgot monad, Extensive category},
+  abstract = {Iterative monads of Calvin Elgot were introduced to treat the semantics of recursive equations purely algebraically. They are Lawvere theories with the property that all ideal systems of recursive equations have unique solutions. We prove that the unique solutions in iterative monads satisfy all the equational properties of iteration monads of Stephen Bloom and Zoltán Ésik, whenever the base category is hyper-extensive and locally finitely presentable. This result is a step towards proving that functorial iteration monads form a monadic category over sets in context. This shows that functoriality is an equational property when considered w.r.t. sets in context.}
+}
+
+@article{lmcs:4784,
+  title    = {{Unguarded Recursion on Coinductive Resumptions}},
+  author   = {Sergey Goncharov and Lutz Schröder and Christoph Rauch and Julian Jakob},
+  url      = {https://lmcs.episciences.org/4784},
+  doi      = {10.23638/LMCS-14(3:10)2018},
+  journal  = {{Logical Methods in Computer Science}},
+  volume   = {{Volume 14, Issue 3}},
+  year     = {2018},
+  month    = Aug,
+  keywords = {Computer Science - Logic in Computer Science ; F.3.2 ; F.3.3 ; D.3.3}
+}
+
+@article{flyspeck,
+  title   = {A FORMAL PROOF OF THE KEPLER CONJECTURE},
+  volume  = {5},
+  doi     = {10.1017/fmp.2017.1},
+  journal = {Forum of Mathematics, Pi},
+  author  = {HALES, THOMAS and ADAMS, MARK and BAUER, GERTRUD and DANG, TAT DAT and HARRISON, JOHN and HOANG, LE TRUONG and KALISZYK, CEZARY and MAGRON, VICTOR and MCLAUGHLIN, SEAN and NGUYEN, TAT THANG and et al.},
+  year    = {2017},
+  pages   = {e2}
+}
+
+@inproceedings{sel4,
+  author    = {Klein, Gerwin},
+  editor    = {Ueda, Kazunori},
+  title     = {From a Verified Kernel towards Verified Systems},
+  booktitle = {Programming Languages and Systems},
+  year      = {2010},
+  publisher = {Springer Berlin Heidelberg},
+  address   = {Berlin, Heidelberg},
+  pages     = {21--33},
+  abstract  = {The L4.verified project has produced a formal, machine- checked Isabelle/HOL proof that the C code of the seL4 OS microkernel correctly implements its abstract implementation. This paper briefly summarises the proof, its main implications and assumptions, reports on the experience in conducting such a large-scale verification, and finally lays out a vision how this formally verified kernel may be used for gaining formal, code-level assurance about safety and security properties of systems on the order of a million lines of code.},
+  isbn      = {978-3-642-17164-2}
+}
+
+
+@article{Incorrectness,
+  author     = {O'Hearn, Peter W.},
+  title      = {Incorrectness logic},
+  year       = {2019},
+  issue_date = {January 2020},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {4},
+  number     = {POPL},
+  url        = {https://doi.org/10.1145/3371078},
+  doi        = {10.1145/3371078},
+  abstract   = {Program correctness and incorrectness are two sides of the same coin. As a programmer, even if you would like to have correctness, you might find yourself spending most of your time reasoning about incorrectness. This includes informal reasoning that people do while looking at or thinking about their code, as well as that supported by automated testing and static analysis tools. This paper describes a simple logic for program incorrectness which is, in a sense, the other side of the coin to Hoare's logic of correctness.},
+  journal    = {Proc. ACM Program. Lang.},
+  month      = {dec},
+  articleno  = {10},
+  numpages   = {32},
+  keywords   = {none}
+}
+
+@article{Coveringtype,
+  author     = {Zhou, Zhe and Mishra, Ashish and Delaware, Benjamin and Jagannathan, Suresh},
+  title      = {Covering All the Bases: Type-Based Verification of Test Input Generators},
+  year       = {2023},
+  issue_date = {June 2023},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {7},
+  number     = {PLDI},
+  url        = {https://doi.org/10.1145/3591271},
+  doi        = {10.1145/3591271},
+  abstract   = {Test input generators are an important part of property-based testing (PBT) frameworks. Because PBT is intended to test deep semantic and structural properties of a program, the outputs produced by these generators can be complex data structures, constrained to satisfy properties the developer believes is most relevant to testing the function of interest. An important feature expected of these generators is that they be capable of producing all acceptable elements that satisfy the function’s input type and generator-provided constraints. However, it is not readily apparent how we might validate whether a particular generator’s output satisfies this coverage requirement. Typically, developers must rely on manual inspection and post-mortem analysis of test runs to determine if the generator is providing sufficient coverage; these approaches are error-prone and difficult to scale as generators become more complex. To address this important concern, we present a new refinement type-based verification procedure for validating the coverage provided by input test generators, based on a novel interpretation of types that embeds “must-style” underapproximate reasoning principles as a fundamental part of the type system. The types associated with expressions now capture the set of values guaranteed to be produced by the expression, rather than the typical formulation that uses types to represent the set of values an expression may produce. Beyond formalizing the notion of coverage types in the context of a rich core language with higher-order procedures and inductive datatypes, we also present a detailed evaluation study to justify the utility of our ideas.},
+  journal    = {Proc. ACM Program. Lang.},
+  month      = {jun},
+  articleno  = {157},
+  numpages   = {24},
+  keywords   = {property-based testing, refinement types, underapproximate reasoning}
+}
+
+@inproceedings{10.1145/964001.964003,
+  author    = {Benton, Nick},
+  title     = {Simple relational correctness proofs for static analyses and program transformations},
+  year      = {2004},
+  isbn      = {158113729X},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/964001.964003},
+  doi       = {10.1145/964001.964003},
+  abstract  = {We show how some classical static analyses for imperative programs, and the optimizing transformations which they enable, may be expressed and proved correct using elementary logical and denotationaltechniques. The key ingredients are an interpretation of program properties as relations, rather than predicates, and a realization that although many program analyses are traditionally formulated in very intensional terms, the associated transformations are actually enabled by more liberal extensional properties.We illustrate our approach with formal systems for analysing and transforming while-programs. The first is a simple type system which tracks constancy and dependency information and can be used to perform dead-code elimination, constant propagation and program slicing as well as capturing a form of secure information flow. The second is a relational version of Hoare logic, which significantly generalizes our first type system and can also justify optimizations including hoisting loop invariants. Finally we show how a simple available expression analysis and redundancy elimination transformation may be justified by translation into relational Hoare logic.},
+  booktitle = {Proceedings of the 31st ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
+  pages     = {14–25},
+  numpages  = {12},
+  keywords  = {types, security, program analysis, partial equivalence relations, optimizing compilation, information flow, dependency, denotational semantics, Hoare logic},
+  location  = {Venice, Italy},
+  series    = {POPL '04}
+}
+
+@article{rhl,
+  author     = {Benton, Nick},
+  title      = {Simple relational correctness proofs for static analyses and program transformations},
+  year       = {2004},
+  issue_date = {January 2004},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {39},
+  number     = {1},
+  issn       = {0362-1340},
+  url        = {https://doi.org/10.1145/982962.964003},
+  doi        = {10.1145/982962.964003},
+  abstract   = {We show how some classical static analyses for imperative programs, and the optimizing transformations which they enable, may be expressed and proved correct using elementary logical and denotationaltechniques. The key ingredients are an interpretation of program properties as relations, rather than predicates, and a realization that although many program analyses are traditionally formulated in very intensional terms, the associated transformations are actually enabled by more liberal extensional properties.We illustrate our approach with formal systems for analysing and transforming while-programs. The first is a simple type system which tracks constancy and dependency information and can be used to perform dead-code elimination, constant propagation and program slicing as well as capturing a form of secure information flow. The second is a relational version of Hoare logic, which significantly generalizes our first type system and can also justify optimizations including hoisting loop invariants. Finally we show how a simple available expression analysis and redundancy elimination transformation may be justified by translation into relational Hoare logic.},
+  journal    = {SIGPLAN Not.},
+  month      = {jan},
+  pages      = {14–25},
+  numpages   = {12},
+  keywords   = {types, security, program analysis, partial equivalence relations, optimizing compilation, information flow, dependency, denotational semantics, Hoare logic}
+}
+
+@inproceedings{InsecSL,
+  author    = {Murray, Toby
+               and Yan, Pengbo
+               and Ernst, Gidon},
+  editor    = {Li, Yi
+               and Tahar, Sofi{\`e}ne},
+  title     = {Compositional Vulnerability Detection with¬†Insecurity Separation Logic},
+  booktitle = {Formal Methods and Software Engineering},
+  year      = {2023},
+  publisher = {Springer Nature Singapore},
+  address   = {Singapore},
+  pages     = {65--82},
+  abstract  = {Memory-safety issues and information leakage are known to be depressingly common. We consider the compositional static detection of these kinds of vulnerabilities in first-order C-like programs. Indeed the latter are relational hyper-safety violations, comparing pairs of program executions, making them more challenging to detect than the former, which require reasoning only over individual executions. Existing symbolic leakage detection methods treat only non-interactive programs, avoiding the challenges of nondeterminism. Also, being whole-program analyses they cannot be applied one-function-at-a-time, thereby ruling out incremental analysis. We remedy these shortcomings by presenting Insecurity Separation Logic (InsecSL), an under-approximate relational program logic for soundly detecting information leakage and memory-safety issues in interactive programs. Importantly, InsecSL reasons about pairs of executions, and so is relational, but purposefully resembles the non-relational Incorrectness Separation Logic (ISL) that is already automated in the Infer tool. We show how InsecSL can be automated by bi-abduction based symbolic execution, and we evaluate two implementations of this idea (one based on Infer) on various case-studies.},
+  isbn      = {978-981-99-7584-6}
+}
+
+@article{HHl,
+  author     = {Dardinier, Thibault and M\"{u}ller, Peter},
+  title      = {Hyper Hoare Logic: (Dis-)Proving Program Hyperproperties},
+  year       = {2024},
+  issue_date = {June 2024},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {8},
+  number     = {PLDI},
+  url        = {https://doi.org/10.1145/3656437},
+  doi        = {10.1145/3656437},
+  abstract   = {Hoare logics are proof systems that allow one to formally establish properties of computer programs. Traditional Hoare logics prove properties of individual program executions (such as functional correctness). Hoare logic has been generalized to prove also properties of multiple executions of a program (so-called hyperproperties, such as determinism or non-interference). These program logics prove the absence of (bad combinations of) executions. On the other hand, program logics similar to Hoare logic have been proposed to disprove program properties (e.g., Incorrectness Logic), by proving the existence of (bad combinations of) executions. All of these logics have in common that they specify program properties using assertions over a fixed number of states, for instance, a single pre- and post-state for functional properties or pairs of pre- and post-states for non-interference.  
+                In this paper, we present Hyper Hoare Logic, a generalization of Hoare logic that lifts assertions to properties of arbitrary sets of states. The resulting logic is simple yet expressive: its judgments can express arbitrary program hyperproperties, a particular class of hyperproperties over the set of terminating executions of a program (including properties of individual program executions). By allowing assertions to reason about sets of states, Hyper Hoare Logic can reason about both the absence and the existence of (combinations of) executions, and, thereby, supports both proving and disproving program (hyper-)properties within the same logic, including (hyper-)properties that no existing Hoare logic can express. We prove that Hyper Hoare Logic is sound and complete, and demonstrate that it captures important proof principles naturally. All our technical results have been proved in Isabelle/HOL.},
+  journal    = {Proc. ACM Program. Lang.},
+  month      = {jun},
+  articleno  = {207},
+  numpages   = {25},
+  keywords   = {Hyperproperties, Incorrectness Logic, Non-Interference, Program Logic}
+}
+
+@article{pRHL,
+  author     = {Barthe, Gilles and K\"{o}pf, Boris and Olmedo, Federico and Zanella-B\'{e}guelin, Santiago},
+  title      = {Probabilistic Relational Reasoning for Differential Privacy},
+  year       = {2013},
+  issue_date = {November 2013},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {35},
+  number     = {3},
+  issn       = {0164-0925},
+  url        = {https://doi.org/10.1145/2492061},
+  doi        = {10.1145/2492061},
+  abstract   = {Differential privacy is a notion of confidentiality that allows useful computations on sensible data while protecting the privacy of individuals. Proving differential privacy is a difficult and error-prone task that calls for principled approaches and tool support. Approaches based on linear types and static analysis have recently emerged; however, an increasing number of programs achieve privacy using techniques that fall out of their scope. Examples include programs that aim for weaker, approximate differential privacy guarantees and programs that achieve differential privacy without using any standard mechanisms. Providing support for reasoning about the privacy of such programs has been an open problem.We report on CertiPriv, a machine-checked framework for reasoning about differential privacy built on top of the Coq proof assistant. The central component of CertiPriv is a quantitative extension of probabilistic relational Hoare logic that enables one to derive differential privacy guarantees for programs from first principles. We demonstrate the applicability of CertiPriv on a number of examples whose formal analysis is out of the reach of previous techniques. In particular, we provide the first machine-checked proofs of correctness of the Laplacian, Gaussian, and exponential mechanisms and of the privacy of randomized and streaming algorithms from the literature.},
+  journal    = {ACM Trans. Program. Lang. Syst.},
+  month      = {nov},
+  articleno  = {9},
+  numpages   = {49},
+  keywords   = {Coq proof assistant, differential privacy, relational Hoare logic}
+}
+
+@inproceedings{10.1145/3009837.3009858,
+  author    = {\c{C}i\c{c}ek, Ezgi and Barthe, Gilles and Gaboardi, Marco and Garg, Deepak and Hoffmann, Jan},
+  title     = {Relational cost analysis},
+  year      = {2017},
+  isbn      = {9781450346603},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/3009837.3009858},
+  doi       = {10.1145/3009837.3009858},
+  abstract  = {Establishing quantitative bounds on the execution cost of programs is essential in many areas of computer science such as complexity analysis, compiler optimizations, security and privacy. Techniques based on program analysis, type systems and abstract interpretation are well-studied, but methods for analyzing how the execution costs of two programs compare to each other have not received attention. Naively combining the worst and best case execution costs of the two programs does not work well in many cases because such analysis forgets the similarities between the programs or the inputs. In this work, we propose a relational cost analysis technique that is capable of establishing precise bounds on the difference in the execution cost of two programs by making use of relational properties of programs and inputs. We develop , a refinement type and effect system for a higher-order functional language with recursion and subtyping. The key novelty of our technique is the combination of relational refinements with two modes of typing-relational typing for reasoning about similar computations/inputs and unary typing for reasoning about unrelated computations/inputs. This combination allows us to analyze the execution cost difference of two programs more precisely than a naive non-relational approach. We prove our type system sound using a semantic model based on step-indexed unary and binary logical relations accounting for non-relational and relational reasoning principles with their respective costs. We demonstrate the precision and generality of our technique through examples.},
+  booktitle = {Proceedings of the 44th ACM SIGPLAN Symposium on Principles of Programming Languages},
+  pages     = {316–329},
+  numpages  = {14},
+  keywords  = {type and effect systems, complexity analysis, Relational reasoning},
+  location  = {Paris, France},
+  series    = {POPL '17}
+}
+
+@article{relcost,
+  author     = {\c{C}i\c{c}ek, Ezgi and Barthe, Gilles and Gaboardi, Marco and Garg, Deepak and Hoffmann, Jan},
+  title      = {Relational cost analysis},
+  year       = {2017},
+  issue_date = {January 2017},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {52},
+  number     = {1},
+  issn       = {0362-1340},
+  url        = {https://doi.org/10.1145/3093333.3009858},
+  doi        = {10.1145/3093333.3009858},
+  abstract   = {Establishing quantitative bounds on the execution cost of programs is essential in many areas of computer science such as complexity analysis, compiler optimizations, security and privacy. Techniques based on program analysis, type systems and abstract interpretation are well-studied, but methods for analyzing how the execution costs of two programs compare to each other have not received attention. Naively combining the worst and best case execution costs of the two programs does not work well in many cases because such analysis forgets the similarities between the programs or the inputs. In this work, we propose a relational cost analysis technique that is capable of establishing precise bounds on the difference in the execution cost of two programs by making use of relational properties of programs and inputs. We develop , a refinement type and effect system for a higher-order functional language with recursion and subtyping. The key novelty of our technique is the combination of relational refinements with two modes of typing-relational typing for reasoning about similar computations/inputs and unary typing for reasoning about unrelated computations/inputs. This combination allows us to analyze the execution cost difference of two programs more precisely than a naive non-relational approach. We prove our type system sound using a semantic model based on step-indexed unary and binary logical relations accounting for non-relational and relational reasoning principles with their respective costs. We demonstrate the precision and generality of our technique through examples.},
+  journal    = {SIGPLAN Not.},
+  month      = {jan},
+  pages      = {316–329},
+  numpages   = {14},
+  keywords   = {type and effect systems, complexity analysis, Relational reasoning}
+}
+
+@article{Compcert,
+  author     = {Leroy, Xavier},
+  title      = {Formal verification of a realistic compiler},
+  year       = {2009},
+  issue_date = {July 2009},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {52},
+  number     = {7},
+  issn       = {0001-0782},
+  url        = {https://doi.org/10.1145/1538788.1538814},
+  doi        = {10.1145/1538788.1538814},
+  abstract   = {This paper reports on the development and formal verification (proof of semantic preservation) of CompCert, a compiler from Clight (a large subset of the C programming language) to PowerPC assembly code, using the Coq proof assistant both for programming the compiler and for proving its correctness. Such a verified compiler is useful in the context of critical software and its formal verification: the verification of the compiler guarantees that the safety properties proved on the source code hold for the executable compiled code as well.},
+  journal    = {Commun. ACM},
+  month      = {jul},
+  pages      = {107–115},
+  numpages   = {9}
+}
+
+@inproceedings{cacmfpo,
+  author    = {Simpson, Alex and Plotkin, Gordon},
+  title     = {Complete Axioms for Categorical Fixed-Point Operators},
+  year      = {2000},
+  isbn      = {0769507255},
+  publisher = {IEEE Computer Society},
+  address   = {USA},
+  abstract  = {We give an axiomatic treatment of fixed-point operators in categories. A notion of iteration operator is defined, embodying the equational properties of iteration theories. We prove a general completeness theorem for iteration operators, relying on a new, purely syntactic characterization of the free iteration theory.We then show how iteration operators arise in axiomatic domain theory. One result derives them from the existence of sufficiently many bifree algebras (exploiting the universal property Freyd introduced in his notion of algebraic compactness). Another result shows that, in the presence of a parameterized natural numbers object and an equational lifting monad, any uniform fixed-point operator is necessarily an iteration operator.},
+  booktitle = {Proceedings of the 15th Annual IEEE Symposium on Logic in Computer Science},
+  pages     = {30},
+  keywords  = {Categorical models, domain theory, fixed points, iteration theories},
+  series    = {LICS '00}
+}
+
+@misc{practicalformalizationmonadicequational,
+  author        = {Reynald Affeldt and Jacques Garrigue and Takafumi Saikawa},
+  title         = {A Practical Formalization of Monadic Equational Reasoning in Dependent-type Theory},
+  year          = {2023},
+  eprint        = {2312.06103},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.LO},
+  url           = {https://arxiv.org/abs/2312.06103}
+}
+
+@inproceedings{10.1007/978-3-319-67729-3_3,
+  author    = {Uustalu, Tarmo
+               and Veltri, Niccol{\`o}},
+  editor    = {Hung, Dang Van
+               and Kapur, Deepak},
+  title     = {The Delay Monad and Restriction Categories},
+  booktitle = {Theoretical Aspects of Computing -- ICTAC 2017},
+  year      = {2017},
+  publisher = {Springer International Publishing},
+  address   = {Cham},
+  pages     = {32--50},
+  abstract  = {We continue the study of Capretta's delay monad as a means of introducing non-termination from iteration into Martin-L{\"o}f type theory. In particular, we explain in what sense this monad provides a canonical solution. We discuss a class of monads that we call {\$}{\$}{\backslash}omega {\$}{\$}-complete pointed classifying monads. These are monads whose Kleisli category is an {\$}{\$}{\backslash}omega {\$}{\$}-complete pointed restriction category where pure maps are total. All such monads support non-termination from iteration: this is because restriction categories are a general framework for partiality; the presence of an {\$}{\$}{\backslash}omega {\$}{\$}-join operation on homsets equips a restriction category with a uniform iteration operator. We show that the delay monad, when quotiented by weak bisimilarity, is the initial {\$}{\$}{\backslash}omega {\$}{\$}-complete pointed classifying monad in our type-theoretic setting. This universal property singles it out from among other examples of such monads.},
+  isbn      = {978-3-319-67729-3}
+}
+
+@inbook{1993Bloom,
+  author    = {Bloom, Stephen L.
+               and {\'E}sik, Zolt{\'a}n},
+  title     = {Iteration Theories},
+  booktitle = {Iteration Theories: The Equational Logic of Iterative Processes},
+  year      = {1993},
+  publisher = {Springer Berlin Heidelberg},
+  address   = {Berlin, Heidelberg},
+  pages     = {159--213},
+  abstract  = {Iteration theories are a generalization of iterative theories. In iteration theories, the dagger operation can be applied to all morphisms f: n {\textrightarrow} n + p, producing a canonical solution of the iteration equation for f. The properties of iteration are captured equationally.},
+  isbn      = {978-3-642-78034-9},
+  doi       = {10.1007/978-3-642-78034-9_7},
+  url       = {https://doi.org/10.1007/978-3-642-78034-9_7}
+}
+
+@inproceedings{Garrigue2022ValidatingOS,
+  title  = {Validating OCaml soundness by translation into Coq},
+  author = {Jacques Garrigue and Takafumi Saikawa},
+  year   = {2022},
+  url    = {https://api.semanticscholar.org/CorpusID:250103567}
+}
+
+
+@article{10.1145/3371119,
+  author     = {Xia, Li-yao and Zakowski, Yannick and He, Paul and Hur, Chung-Kil and Malecha, Gregory and Pierce, Benjamin C. and Zdancewic, Steve},
+  title      = {Interaction trees: representing recursive and impure programs in Coq},
+  year       = {2019},
+  issue_date = {January 2020},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {4},
+  number     = {POPL},
+  url        = {https://doi.org/10.1145/3371119},
+  doi        = {10.1145/3371119},
+  abstract   = {Interaction trees (ITrees) are a general-purpose data structure for representing the behaviors of recursive programs that interact with their environments. A coinductive variant of “free monads,” ITrees are built out of uninterpreted events and their continuations. They support compositional construction of interpreters from event handlers, which give meaning to events by defining their semantics as monadic actions. ITrees are expressive enough to represent impure and potentially nonterminating, mutually recursive computations, while admitting a rich equational theory of equivalence up to weak bisimulation. In contrast to other approaches such as relationally specified operational semantics, ITrees are executable via code extraction, making them suitable for debugging, testing, and implementing software artifacts that are amenable to formal verification. We have implemented ITrees and their associated theory as a Coq library, mechanizing classic domain- and category-theoretic results about program semantics, iteration, monadic structures, and equational reasoning. Although the internals of the library rely heavily on coinductive proofs, the interface hides these details so that clients can use and reason about ITrees without explicit use of Coq’s coinduction tactics. To showcase the utility of our theory, we prove the termination-sensitive correctness of a compiler from a simple imperative source language to an assembly-like target whose meanings are given in an ITree-based denotational semantics. Unlike previous results using operational techniques, our bisimulation proof follows straightforwardly by structural induction and elementary rewriting via an equational theory of combinators for control-flow graphs.},
+  journal    = {Proc. ACM Program. Lang.},
+  month      = dec,
+  articleno  = {51},
+  numpages   = {32},
+  keywords   = {monads, compiler correctness, coinduction, Coq}
+}
+
+@inproceedings{10.1145/3372885.3373813,
+  author    = {Zakowski, Yannick and He, Paul and Hur, Chung-Kil and Zdancewic, Steve},
+  title     = {An equational theory for weak bisimulation via generalized parameterized coinduction},
+  year      = {2020},
+  isbn      = {9781450370974},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/3372885.3373813},
+  doi       = {10.1145/3372885.3373813},
+  abstract  = {Coinductive reasoning about infinitary structures such as streams is widely applicable. However, practical frameworks for developing coinductive proofs and finding reasoning principles that help structure such proofs remain a challenge, especially in the context of machine-checked formalization. This paper gives a novel presentation of an equational theory for reasoning about structures up to weak bisimulation. The theory is both compositional, making it suitable for defining general-purpose lemmas, and also incremental, meaning that the bisimulation can be created interactively. To prove the theory’s soundness, this paper also introduces generalized parameterized coinduction, which addresses expressivity problems of earlier works and provides a practical framework for coinductive reasoning. The paper presents the resulting equational theory for streams, but the technique applies to other structures too. All of the results in this paper have been proved in Coq, and the generalized parameterized coinduction framework is available as a Coq library.},
+  booktitle = {Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs},
+  pages     = {71–84},
+  numpages  = {14},
+  keywords  = {weak bisimulation, up-to techniques, equational theory, coinduction, Coq},
+  location  = {New Orleans, LA, USA},
+  series    = {CPP 2020}
+}
+
+@article{10.1145/2034574.2034777,
+  author     = {Gibbons, Jeremy and Hinze, Ralf},
+  title      = {Just do it: simple monadic equational reasoning},
+  year       = {2011},
+  issue_date = {September 2011},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {46},
+  number     = {9},
+  issn       = {0362-1340},
+  url        = {https://doi.org/10.1145/2034574.2034777},
+  doi        = {10.1145/2034574.2034777},
+  abstract   = {One of the appeals of pure functional programming is that it is so amenable to equational reasoning. One of the problems of pure functional programming is that it rules out computational effects. Moggi and Wadler showed how to get round this problem by using monads to encapsulate the effects, leading in essence to a phase distinction - a pure functional evaluation yielding an impure imperative computation. Still, it has not been clear how to reconcile that phase distinction with the continuing appeal of functional programming; does the impure imperative part become inaccessible to equational reasoning? We think not; and to back that up, we present a simple axiomatic approach to reasoning about programs with computational effects.},
+  journal    = {SIGPLAN Not.},
+  month      = sep,
+  pages      = {2–14},
+  numpages   = {13},
+  keywords   = {algebraic specification, equational reasoning, lawvere theories, monads}
+}
+
+@inproceedings{ValidatingOS,
+  title  = {Validating OCaml soundness by translation into Coq},
+  author = {Jacques Garrigue and Takafumi Saikawa},
+  year   = {2022},
+  url    = {https://api.semanticscholar.org/CorpusID:250103567}
+}
+
+@inproceedings{10.1145/2034773.2034777,
+  author    = {Gibbons, Jeremy and Hinze, Ralf},
+  title     = {Just do it: simple monadic equational reasoning},
+  year      = {2011},
+  isbn      = {9781450308656},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/2034773.2034777},
+  doi       = {10.1145/2034773.2034777},
+  abstract  = {One of the appeals of pure functional programming is that it is so amenable to equational reasoning. One of the problems of pure functional programming is that it rules out computational effects. Moggi and Wadler showed how to get round this problem by using monads to encapsulate the effects, leading in essence to a phase distinction - a pure functional evaluation yielding an impure imperative computation. Still, it has not been clear how to reconcile that phase distinction with the continuing appeal of functional programming; does the impure imperative part become inaccessible to equational reasoning? We think not; and to back that up, we present a simple axiomatic approach to reasoning about programs with computational effects.},
+  booktitle = {Proceedings of the 16th ACM SIGPLAN International Conference on Functional Programming},
+  pages     = {2–14},
+  numpages  = {13},
+  keywords  = {algebraic specification, equational reasoning, lawvere theories, monads},
+  location  = {Tokyo, Japan},
+  series    = {ICFP '11}
+}
+
+
