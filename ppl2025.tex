@@ -69,8 +69,8 @@ Hierarchy builderライブラリ\cite{cohen:hal-02478907}を用いて実装す�
 %現在monaeでできることについて書く？
 \subsection{構造的でない再帰関数の扱い}
 しかし、定理証明支援系では無矛盾性の保証のため、停止しない関数を定義できない。
-CoqのFixpointコマンドでは、引数の持つ整礎な順序関係が構文的に自明な構造的再帰関数については定義できる。
-そうでないときは、Equationコマンドなどを用いて引数が整礎な順序関係を持ち減少する値であることの
+Coqの\coqin{Fixpoint}コマンドでは、引数の持つ整礎な順序関係が構文的に自明な構造的再帰関数については定義できる。
+そうでないときは、\coqin{Equation}コマンドなどを用いて引数が整礎な順序関係を持ち減少する値であることの
 証明とともに定義する必要がある。
 しかし、非決定性を持つquicksortなどのプログラムでは、引数が減少することを証明することはできず、
 \cite{monae}ではdependently-typed assertionと呼ばれる方法を用いる工夫が行われている。
@@ -82,6 +82,8 @@ CoqのFixpointコマンドでは、引数の持つ整礎な順序関係が構文
 Coqでは、生産性条件を満たす限り、無限にコンストラクターを適用することができるため、
 それを用いて無条件な再帰呼び出しを行い、構造的でない再帰関数を扱うことができる。
 それらの関数は、戻り値が余帰納的データとなるが、停止性の証明なしに定義することができる。\\
+例えば、\cite{10.1145/3371119}では、coinductive typeを用いて定義されたデータ構造ITreeを用いて
+インタラクションのある一般再帰関数を表現している。\\
 Delayモナド\cite{lmcs:2265}を用いるとそういった余再帰的な関数呼び出しを行うプログラムを
 モナディックプログラムとして表すことができる。
 したがって、本研究では、Delayモナドに対する適切なインターフェイスを定義することで
@@ -130,15 +132,15 @@ Delayモナドは、余帰納的に定義されることで
 停止しない関数の計算を表現することが可能である。\\
 Delayモナドを構成する関手Delayは、(A:Type) $\rightarrow$ (\text{cofixpoint} of X = A + X )
 という型を持つ関数である。
-Coqでは、Coinductive コマンドと、各最大不動点への埋め込みを表すコンストラクターDNow, DLater
+Coqでは、\coqin{CoInductive}コマンドと、各最大不動点への埋め込みを表すコンストラクター\coqin{DNow}, \coqin{DLater}
 を用いて定義することができる。
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 CoInductive Delay (A : Type) : Type :=
   |DNow : A -> Delay A
   |DLater : Delay A -> Delay A.
 \end{minted}
-Delayモナドのreturnオペレーターは、コンストラクタDNowであり、
-bindオペレーターはCoFixpointコマンドを用いて定義される。
+Delayモナドのreturnオペレーターは、コンストラクタ\coqin{DNow}であり、
+bindオペレーターは\coqin{CoFixpoint}コマンドを用いて定義される。
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 Let ret (a:A) := DNow a
 CoFixpoint bind (m: Delay A) (f: A -> Delay B ) :=
@@ -147,9 +149,9 @@ CoFixpoint bind (m: Delay A) (f: A -> Delay B ) :=
   |DLater d => DLater (bind d f)
   end.
 \end{minted}
-さて、Delayモナドに付随するoperatorとして、繰り返し処理を行うwhileを定義する。
+さて、Delayモナドに付随するオペレーターとして、繰り返し処理を行うwhileを定義する。
 while オペレーターはcomplete elgot monadの$\dagger$オペレーターに相当する。\\
-CoFixpointコマンドを用いて定義され、右埋め込みの値\mintinline{ssr}|inr a|が値a
+\coqin{CoFixpoint}コマンドを用いて定義され、右埋め込みの値\mintinline{ssr}|inr a|が値a
 での繰り返しの継続、左埋め込みの値\mintinline{ssr}|inl b|が値bを戻り値とする繰り返し
 の終了を表す。
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
@@ -161,22 +163,22 @@ CoFixpoint while {A B} (body: A -> M (B + A)) : A -> M B :=
 %CoFixpointに関する説明を詳しく？
 \subsection{計算的同値性}
 さて、ここで等式変形による検証は、Delayモナドを用いて表したプログラムに対しては適さない。
-例えば、階乗を計算する関数factをDelayモナドを用いて定義した場合、fact 3は
-明示的な計算ステップDLaterを3つ含むため、DNow 6と一致しないためである。
+例えば、階乗を計算する関数\coqin{fact}をDelayモナドを用いて定義した場合、\coqin{fact 3}は
+明示的な計算ステップ\coqin{DLater}を3つ含むため、\coqin{DNow 6}と一致しないためである。
 したがって、計算的な同値性を表す関係が必要である。
-そこで、有限個のDLaterを除いて等しい場合、またはどちらもDLaterが無限個続く場合に計算的に
-等しいとみなす関係wBisimを\cite{lmcs:2265}と同様に次のように導入した。\\
-まず、計算がある値で停止する性質をTerminateという帰納的な関係で定義する。\\
+そこで、有限個の\coqin{DLater}を除いて等しい場合、またはどちらも\coqin{DLater}が無限個続く場合に計算的に
+等しいとみなす関係\coqin{wBisim}を\cite{lmcs:2265}と同様に次のように導入した。\\
+まず、計算がある値で停止する性質を\coqin{Terminate}という帰納的な関係で定義する。\\
 \mintinline{ssr}|Terminate d a| とは、dが計算の結果、値aを返すことである。
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 Inductive Terminates A : Delay A -> A -> Prop :=
   |TDNow a : Terminates (DNow a) a
   |TDLater d a : Terminates d a -> Terminates (DLater d) a.
 \end{minted}
-次に、この述語を用いて、wBisimを余帰納的関係として定義する。
-つまり、d1,d2が有限個のDLaterを除いて等しい場合wBTerminate d1 d2 aが成り立ち、
-d1,d2がどちらもDLaterが無限個続く場合は、wBLaterにより
-余帰納法を用いることで、wBisim d1 d2を示すことができる。
+次に、この述語を用いて、\coqin{wBisim}を余帰納的関係として定義する。
+つまり、d1,d2が有限個の\coqin{DLater}を除いて等しい場合\coqin{wBTerminate d1 d2 a}が成り立ち、
+d1,d2がどちらも\coqin{DLater}が無限個続く場合は、\coqin{wBLater}により
+余帰納法を用いることで、\coqin{wBisim d1 d2}を示すことができる。
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 CoInductive wBisim A : Delay A -> Delay A -> Prop :=
   |wBTerminate d1 d2 a :
@@ -185,7 +187,7 @@ CoInductive wBisim A : Delay A -> Delay A -> Prop :=
 \end{minted}
 
 \subsection{余帰納法を用いた等式の証明}
-ここでは、どのように余帰納法の原理を用いて、wBisimに関する性質をCoq上で示したかについて
+ここでは、どのように余帰納法の原理を用いて、\coqin{wBisim}に関する性質をCoq上で示したかについて
 説明する。\\
 まず、余帰納法の原理とは次のような主張である。
 \begin{theorem}{余帰納法の原理\\}
@@ -193,23 +195,23 @@ CoInductive wBisim A : Delay A -> Delay A -> Prop :=
   ただし、Fが単調であるとは、$A \subset B \implies F(A) \subset F(B)$が成り立つことである。\\
   この時、$A \subset F(A) \implies A \subset (F \ \text{の最大不動点})$が成り立つ。
 \end{theorem}
-このもとで、wBisim Aの定義は、集合Xについて、
+このもとで、\coqin{wBisim A}の定義は、集合Xについて、
 \begin{align*}
-  F(X) = \{ (d_1, d_2) | \exists a \in A, \text{terminate} \ d_1 \ a \ \land \ \text{terminate} \ d_1 \ a \ \} \\
-  \cup \ \{ (\text{DLater} \ d_1, \text{DLater} \  d_2) | (d_1, d_2) \in X\}
+  F(X) = \{ \coqin{(d1, d2)} | \exists \coqin{a} \in A, \coqin{Terminate d1 a }\ \land \ \coqin{Terminate d1 a} \} \\
+  \cup \ \{ \coqin{(DLater d1,DLater d2)} | \coqin{(d1, d2)} \in X\}
 \end{align*}
 で定義されるFの最大不動点として定義される。\\
-Coqでは、cofixタクティックを用いて最大不動点を取ることで余帰納法を行うことができる。\\
+Coqでは、\coqin{cofix}タクティックを用いて最大不動点を取ることで余帰納法を行うことができる。\\
 例えば、余帰納法を用いて\mintinline{ssr}|wBisim (DLater d) d |を示した。
 
 Fは定義より、明らかに単調である。\\
-従って、余帰納法の原理より、集合 $Y = \{ (\text{DLater} \ d, d) | d \in \text{Delay} \ A \} $とおき、
+従って、余帰納法の原理より、集合 $Y = \{ \coqin{(DLater d, d)} | \coqin{d} \in \coqin{Delay A} \} $とおき、
 $Y \subset F (Y) $が成り立つを示せばよい。Coqでは、この最大不動点Yに対応する命題をcofixで宣言することができる。\\
-任意にYの要素dを取ると、定義より、
-$d = (\text{DLater} \ (\text{DNow} \ a), \ \text{DNow} \ a)$または、
-$d = (\text{DLater} (\text{DLater} \ d'), (\text{DLater} \ d'))$の二つの場合がある。\\
-一つ目の場合は、terminate (DNow a) a, terminate (DLater(DNow a)) aが成り立つため、$d \in F(Y)$である。\\
-二つ目の場合は、Yの定義より、$ ( \text{DLater d'}, \text{ d' } ) \in Y$である。従って$ d \in Y $である。\\
+任意にYの要素\coqin{d}を取ると、定義より、
+$\coqin{d} = \coqin{(DLater (DNow a), DNow a)}$または、
+$\coqin{d} = \coqin{(DLater (DLater d'), (DLater d'))}$の二つの場合がある。\\
+一つ目の場合は、\coqin{Terminate (DNow a) a}, \coqin{Terminate (DLater(DNow a)) a}が成り立つため、$d \in F(Y)$である。\\
+二つ目の場合は、Yの定義より、$ \coqin{(DLater d', d') } \in Y$である。従って$ \coqin{d} \in Y $である。\\
 よって、$Y \subset F (Y)$ であることがわかった。\\
 したがって、Coqでは、次のように証明される。
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
@@ -227,11 +229,11 @@ Qed.
 
 \subsection{Delayモナドのインターフェイス}
 以上のことを踏まえて、Delayモナドのインターフェイスを表1,2,3のように定義した。\\
-まず、Delayモナドのオペレイターは、繰り返し処理を行うwhileである。また、計算の等さを表す関係である、
-wBisim \, $ \approx $と、それが同値関係であるという規則を導入する。\\
-また、whileオペレーターに対する6つの規則を定義した。
+まず、Delayモナドのオペレイターは、繰り返し処理を行う\coqin{while}である。また、計算の等さを表す関係である、
+\coqin{wBisim} \, $ \approx $と、それが同値関係であるという規則を導入する。\\
+また、\coqin{while}オペレーターに対する6つの規則を定義した。
 初めの3つの規則は、Complete elgot monadの定義を参考にした。\\
-fixpointEは、whileによって、繰り返す処理をすることができることを表す規則である。\\
+fixpointEは、\coqin{while}によって、繰り返す処理をすることができることを表す規則である。\\
 naturalityEは、while文により行った計算結果を、次の処理に渡す場合、
 それを一つのwhile文により記述できることを表す。\\
 codiagonalEは、連続して入れ子になったwhile文を一つのwhile文にすることができることを表す。\\
@@ -289,7 +291,7 @@ while文全体として等しいことを表す。\\
 
 \section{型付きストアモナドとの組み合わせ}
 
-Delayモナドのinterfaceを定義することで、一般再帰関数に対する検証が可能になった。
+Delayモナドのインターフェイスを定義することで、一般再帰関数に対する検証が可能になった。
 この手法をより多くの関数へ適用するためには、Delayモナドを他のモナドと組み合わせることにより
 複雑な副作用を表現する必要がある。そこで、\cite{practicalformalizationmonadicequational}
 において導入された型付きストアモナドとの組み合わせたdelay\_typed\_storemonadを定義した。
@@ -298,7 +300,7 @@ Delayモナドのinterfaceを定義することで、一般再帰関数に対す
 型付きストアモナドは、Coqgen\cite{ValidatingOS}により変換したコードの、
 referenceを表すために導入された。\\
 型と値のレコードbindingのリストを状態として使うことで、型付きストアを表している。\\
-また参照を扱うためのoperatorであるcnew, cget, cputを持つ。
+また参照を扱うためのoperatorである\coqin{cnew}, \coqin{cget}, \coqin{cput}を持つ。
 
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 Record binding :=
@@ -308,15 +310,17 @@ Record binding :=
 状態モナドトランスフォーマー\coqin{MS}の合成で定義された型付きストアモナドトランスフォーマーに
 変更し、それぞれのモナドトランスフォーマーがDelayモナドの構造を保つことを示すことで、
 delay\_typed\_storemonadを定義した。
-
 \begin{center}
+
   \coqin{MS (seq binding) option_monad} \ $\Rightarrow$ \
   \coqin{MS (seq binding) (MX unit M)}
 \end{center}
 
+
+
 \subsection{状態モナドトランスフォーマーとの組み合わせ}
 状態モナドトランスフォーマーstateTは次のように定義される。\\
-Sが状態、Mが変換前の関手、としてMS,retS,bindSがそれぞれ変換後の関手、return, bindである。
+Sが状態、Mが変換前の関手、として\coqin{MS},\coqin{retS},\coqin{bindS}がそれぞれ変換後の関手、return, bindである。
 
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 Let MS := fun A => S -> M (A * S).
@@ -325,8 +329,8 @@ Let bindS m f := fun s => m s >>= uncurry f.
 Let liftS m := fun s => m >>= (fun x => Ret (x, s)).
         \end{minted}
 さて、stateTにより状態モナドと組み合わせるためには、delayモナドがstateTで変換後、delayモナドであることを示す
-必要がある。そこで、\cite{PIROG2013309}を参考に次のようにwhileDSとwBisimDSを定義した。
-関数dist1は、分配法則を表し、型を合わせるために定義した。
+必要がある。そこで、\cite{PIROG2013309}を参考に次のように\coqin{whileDS}と\coqin{wBisimDS}を定義した。
+関数\coqin{dist1}は、分配法則を表し、型を合わせるために定義した。
 \iffalse
   そこで、次の定理を用いた。\\
 
@@ -349,7 +353,7 @@ Let wBisimDS (ds1 ds2 : DS A) : Prop :=
 
 \subsubsection{例外モナドトランスフォーマーとの組み合わせ}
 例外モナドトランスフォーマーexceptTは次のように定義される。\\
-Zが例外の集合、Mが変換前の関手、としてMX,retX,bindXがそれぞれ変換後の関手、return, bindである。
+Zが例外の集合、Mが変換前の関手、として\coqin{MX},\coqin{retX},\coqin{bindX}がそれぞれ変換後の関手、return, bindである。
 
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 Let MX := fun X => M (Z + X).
@@ -359,7 +363,7 @@ Let bindX t f :=
         \end{minted}
 stateTの場合と同様に、delayモナドがexceptTで変換後delayモナドであることを示す必要がある。
 そこで、次のように定義した。
-関数DEAを合成することでにより、エラーが発生した際\coqin{inl (inl u)}を返すことで、繰り返しを終了する。
+関数\coqin{DEA}を合成することでにより、エラーが発生した際\coqin{inl (inl u)}を返すことで、繰り返しを終了する。
 
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 M: delayMonad
@@ -401,9 +405,10 @@ Add Parametric Relation A : (M A) (@wBisim M A)
   as wBisim_rel.
         \end{minted}
 インターフェイスの規則であるbindmwBとbindfwB、whilewBがそれぞれ
-関数bind, whileが同値関係wBisimを保つことを表している。
-したがって、bind,whileを Parametric morphismとしてインスタンス化した。
-定義の中に現れる\coqin{(pointwise_relation A (@wBisim M B))}とは関数の関係であって、
+関数\coqin{bind}, \coqin{while}が同値関係\coqin{wBisim}を保つことを表している。
+したがって、\coqin{bind},\coqin{while}を Parametric morphismとしてインスタンス化した。
+定義の中に現れる\\
+\coqin{(pointwise_relation A (@wBisim M B))}とは関数の関係であって、
 任意の値に対して関数が同じ同値類の値を返すことを表す。
 これにより、図1,2のような書き換えが可能になる。
 さらに、\coqin{setoid_rewrite}を用いることで、束縛変数
@@ -442,7 +447,7 @@ H2 : forall a, f a |$\approx$| g a
 d2 >>= g |$\approx$ \, $\cdots$|
   \end{minted}
   \end{minipage}
-  \caption{rewrite for bind}
+  \caption{rewrite with bind}
 \end{figure}
 
 \begin{figure}[h]
@@ -456,7 +461,7 @@ d2 >>= g |$\approx$ \, $\cdots$|
   \end{minipage}
   \begin{minipage}{0.2\textwidth}
     \begin{center}
-      \scalebox{1.1}{$\xRightarrow[\coqin{rewrite H.}]{}$}
+      \scalebox{1.1}{$\xRightarrow[\coqin{rewrite H.  }]{}$}
     \end{center}
   \end{minipage}
   \begin{minipage}{0.38\textwidth}
@@ -466,7 +471,7 @@ H : forall a, f a |$\approx$| g a.
 while g b |$\approx$ \, $\cdots$|
   \end{minted}
   \end{minipage}
-  \caption{rewrite for while}
+  \caption{rewrite with while}
 \end{figure}
 
 \section{検証の具体例}
@@ -486,7 +491,7 @@ while g b |$\approx$ \, $\cdots$|
   \end{tabular}
 \end{table}
 
-monaeでは、各Monadをインスタンス化した際にこれらの等式と関連する補題を用いることができるようになる。
+Monaeでは、各Monadをインスタンス化した際にこれらの等式と関連する補題を用いることができるようになる。
 特にここでは、表4の等式を用いて検証する。
 
 \subsection{マッカーシーの91関数に対する検証}
@@ -501,7 +506,7 @@ $m \leq 100$の時、11足した値で二重に再帰するため、停止性が
 判定できない関数である。\\
 したがって、mc91関数をdelayモナドを用いて表し、自然数$m \leq 100$について
 91が戻り値となることを示した。\\
-まず、while operatorを用いてmc91関数を用いて表す。残っている再帰の深さd、mが計算している値である。
+まず、\coqin{while}オペレーターを用いてmc91関数を用いて表す。残っている再帰の深さn、mが計算している値である。
 
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 Let mc91_body nm :=
@@ -514,7 +519,7 @@ Let mc91_body nm :=
 Let mc91 n m := while mc91_body (n.+1, m).
     \end{minted}
 
-mc91関数が91を返すことを示す際、本質的な性質は、補題mc91succEである。
+mc91関数が91を返すことを示す際、本質的な性質は、補題\coqin{mc91succE}である。
 この補題と、\coqin{mc91 n 101 |$\approx$| Ret 91}であることと、$ k =  90 - m $に関する帰納法により従う。
 
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em, escapeinside=||]{ssr}
@@ -551,8 +556,8 @@ mc91 n m
 \end{figure}
 
 \subsection{状態を用いたfactorial}
-3.3節で定義したfactdtsについて、実際に階乗を計算していること
-を検証する。つまり次factnと計算として一致することを示した。
+3.3節で定義した\coqin{factdts}について、実際に階乗を計算していること
+を検証する。つまり次\coqin{factn}と計算として一致することを示した。
 
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 Fixpoint fact n := match n with |O => 1 |m.+1 => n * fact m end.
@@ -560,9 +565,9 @@ Let factn n := do r <- cnew ml_int (fact n);
                do v <- cget r; @ret M _ v.
 \end{minted}
 
-ここでは、factdtsのwhileを用いた部分fact\_auxがfactを用いた形に書き換えられることについて
-取り上げる。この書き換えと、型付きストアモナドの等式を用いることで、factnに一致することが従う。
-証明はnに関する帰納法により図2,3のように行った。\\
+ここでは、\coqin{factdts}の\coqin{while}を用いた部分\coqin{fact_aux}が\coqin{fact}を用いた形に書き換えられることについて
+取り上げる。この書き換えと、型付きストアモナドの等式を用いることで、\coqin{factn}に一致することが従う。
+証明はnに関する帰納法により図4,5のように行った。\\
 \coqin{under}タクティックを用いることで、bindに関する束縛変数を含む項に関する等式
 を行っている。
 
@@ -586,7 +591,7 @@ cget r >>= (fun s => cput r (1 * s) >> Ret tt)
 \end{figure}
 
 n = n' + 1の時の証明の際、\coqin{setoid_rewrite IH}の部分では、
-束縛変数を含む項に対するwBisimに関する等価性変形を行っている。これは、
+束縛変数を含む項に対する\coqin{wBisim}に関する等価性変形を行っている。これは、
 第3節で説明したように、bindをパラメトリックモルフィズムとして、インスタンス化
 しているため、行うことができる。
 
