@@ -11,6 +11,7 @@
 \usepackage[inline]{enumitem}
 \usepackage{url}
 \usepackage{tikz}
+\usepackage{bussproofs}
 \usepackage{xhfill}
 \usepackage{ulem}
 \usetikzlibrary{calc,positioning,fit}
@@ -58,44 +59,47 @@ Gibbonsらは、モナドの持つ代数的な性質に着目し、それぞれ�
 %モナドトランスフォーマーもしくはtyped store monadについて書く？
 
 
-\subsection{Monae}
-Monae\cite{monae}は、定理証明支援系Coqでモナディック等式変形を用いた検証を可能にするツールである。
+\paragraph{Monae}
+定理証明支援系Coqでモナディック等式変形を用いた検証を可能にするツールはMonae\cite{monae}である。
 Monaeは、モナディック等式変形を行うための等式の集まりであるインターフェイスと、
 その健全性を保証するモデルから構成される。
-Coqを用いることで、検証の正しさを保証し、Mathcomp/ssreflectを用いた簡潔な証明が可能になる。
+Coqを用いることで、検証の正しさを保証し、MathComp/SSReflectを用いた簡潔な証明が可能になる。
 Monaeでは、モナディック等式変形で必要となるインターフェイスの階層を
-Hierarchy builderライブラリ\cite{cohen:hal-02478907}を用いて実装することで、
+Hierarchy Builder\cite{cohen:hal-02478907}を用いて実装することで、
 複数のモナドの組み合わせや、再利用可能な構造的な証明を可能にする。
 %現在monaeでできることについて書く？
-\subsection{構造的でない再帰関数の扱い}
-しかし、定理証明支援系では無矛盾性の保証のため、停止しない関数を定義できない。
+\paragraph{構造的でない再帰関数の扱い}
+定理証明支援系では無矛盾性の保証のため、停止しない関数を定義できない。
 Coqの\coqin{Fixpoint}コマンドでは、引数の持つ整礎な順序関係が構文的に自明な構造的再帰関数については定義できる。
 そうでないときは、\coqin{Equation}コマンドなどを用いて引数が整礎な順序関係を持ち減少する値であることの
 証明とともに定義する必要がある。
-しかし、非決定性を持つquicksortなどのプログラムでは、引数が減少することを証明することはできず、
-\cite{monae}ではdependently-typed assertionと呼ばれる方法を用いる工夫が行われている。
-また、停止性の未解決なコラッツ関数などは定義することができない。
+%停止性の証明なしに扱える　さらに、構造
+%一般再帰が扱える　さらに、quick sortなども
+さらに非決定性を持つquicksortなどのプログラムでは、引数が減少することを証明することはできず、
+dependently-typed assertion\cite{d}などの工夫が必要になる。
+%また、停止性の未解決なコラッツ関数などは定義することができない。
 %interaction treeを全面的に出す?
-\subsection{CoInductive typeを用いた一般再帰関数の定義}
+\paragraph{CoInductive typeを用いた一般再帰関数の定義}
 定理証明支援系で構造的でない再帰関数を扱う他の方法として、余帰納的定義を用いる手法がある。
 余帰納的定義は無限長のリストであるストリームなど無限個のコンストラクターを持つデータを定義する際に用いられる。
 Coqでは、生産性条件を満たす限り、無限にコンストラクターを適用することができるため、
 それを用いて無条件な再帰呼び出しを行い、構造的でない再帰関数を扱うことができる。
 それらの関数は、戻り値が余帰納的データとなるが、停止性の証明なしに定義することができる。\\
-例えば、\cite{10.1145/3371119}では、coinductive typeを用いて定義されたデータ構造ITreeを用いて
-インタラクションのある一般再帰関数を表現している。\\
+例えば、停止性の未解決なコラッツ関数を定義することが可能である。
+%例えば、\cite{10.1145/3371119}では、coinductive typeを用いて定義されたデータ構造ITreeを用いて
+%インタラクションのある一般再帰関数を表現している。\\
 Delayモナド\cite{lmcs:2265}を用いるとそういった余再帰的な関数呼び出しを行うプログラムを
 モナディックプログラムとして表すことができる。
 したがって、本研究では、Delayモナドに対する適切なインターフェイスを定義することで
 Monaeを用いた停止性の保証できない一般再帰関数に対する検証を試みた。
 %\subsection{interaction treeにおける構造的でない再帰関数の扱い}
-\subsection{Complete elgot monad}
+\paragraph{Complete elgot monad}
 Delayモナドのインターフェイスを定義するにあたって、complete elgot monad\cite{ADAMEK20101306}
 を参考にした。
-complete elogot monadは、代数的に再帰構造を扱うiteration theory\cite{1993Bloom}に
+complete elgot monadは、代数的に再帰構造を扱うiteration theory\cite{1993Bloom}に
 対応しており、イテレーションと呼ばれる、
 各$f : X \rightarrow M (Y + X)$を$f^{\dagger} : X \rightarrow M Y$に対応させるオペレーター
-$\_^{\dagger}$に関する4つの公理を満たすモナドとして定義される。\\
+$(\_^{\dagger})$に関する4つの公理を満たすモナドとして定義される。\\
 例えば、等式fixpointは次の可換図式で表される。
 \xymatrixcolsep{2.5cm}
 \[
@@ -109,7 +113,7 @@ Delayモナドは有限回の計算ステップを無視する同一視を行う
 complete elgot monadとなることが知られている\cite{10.1007/978-3-319-67729-3_3}。
 %\subsection{Typed store monad transformer}
 
-\subsection{本稿の貢献と構成}
+\paragraph{本稿の貢献と構成}
 本稿の貢献は以下のようにまとめられる。
 \begin{itemize}
   \item Delayモナドの計算的同値性に関する規則を含むインターフェイスを定義し、その健全性を
@@ -187,45 +191,71 @@ CoInductive wBisim A : Delay A -> Delay A -> Prop :=
 \end{minted}
 
 \subsection{余帰納法を用いた等式の証明}
-ここでは、どのように余帰納法の原理を用いて、\coqin{wBisim}に関する性質をCoq上で示したかについて
-説明する。\\
-まず、余帰納法の原理とは次のような主張である。
-\begin{theorem}{余帰納法の原理\\}
-  X,A,B,Cを集合,$F$を$\mathcal{P}(X)$から$\mathcal{P}(X)$への単調な関数とする。\\
-  ただし、Fが単調であるとは、$A \subset B \implies F(A) \subset F(B)$が成り立つことである。\\
-  この時、$A \subset F(A) \implies A \subset (F \ \text{の最大不動点})$が成り立つ。
-\end{theorem}
-このもとで、\coqin{wBisim A}の定義は、集合Xについて、
-\begin{align*}
-  F(X) = \{ \coqin{(d1, d2)} | \exists \coqin{a} \in A, \coqin{Terminate d1 a }\ \land \ \coqin{Terminate d1 a} \} \\
-  \cup \ \{ \coqin{(DLater d1,DLater d2)} | \coqin{(d1, d2)} \in X\}
-\end{align*}
-で定義されるFの最大不動点として定義される。\\
-Coqでは、\coqin{cofix}タクティックを用いて最大不動点を取ることで余帰納法を行うことができる。\\
-例えば、余帰納法を用いて\mintinline{ssr}|wBisim (DLater d) d |を示した。
+%coinductionとcoqのcofixがどう対応しているか
+%coqではcofixは、inductionがfixで証明項を作るのと同様に、cofixで証明項を作ることで
+%coinductionを実装している。つまり、この例では cofix CIH (d : M A) : Oeq (DLater d) d :=
+%から始まる証明項を作ることで、余帰納法を行うことができる。
+%さて、cofixの型規則は以下である。(論文引用しながら)
+%論文の型規則、ガーデッドコンディションを日本語で書き下す、簡単に
+%The predicate Co ensures that, going downwards in M, after a certain number of abstractions and case analysis, there is always a constructor. Once a constructor has been placed, the predicate C1 allows to use f in its recursive arguments. 
+%（1）余帰納呼び出しは、CoInductiveのコンストラクタを含まなければならない
 
-Fは定義より、明らかに単調である。\\
-従って、余帰納法の原理より、集合 $Y = \{ \coqin{(DLater d, d)} | \coqin{d} \in \coqin{Delay A} \} $とおき、
-$Y \subset F (Y) $が成り立つを示せばよい。Coqでは、この最大不動点Yに対応する命題をcofixで宣言することができる。\\
-任意にYの要素\coqin{d}を取ると、定義より、
-$\coqin{d} = \coqin{(DLater (DNow a), DNow a)}$または、
-$\coqin{d} = \coqin{(DLater (DLater d'), (DLater d'))}$の二つの場合がある。\\
-一つ目の場合は、\coqin{Terminate (DNow a) a}, \coqin{Terminate (DLater(DNow a)) a}が成り立つため、$d \in F(Y)$である。\\
-二つ目の場合は、Yの定義より、$ \coqin{(DLater d', d') } \in Y$である。従って$ \coqin{d} \in Y $である。\\
-よって、$Y \subset F (Y)$ であることがわかった。\\
-したがって、Coqでは、次のように証明される。
+%（2）余帰納呼び出しは、CoInductiveのコンストラクタで包まなければならない
+
+%（3）余再帰呼び出しは、CoInductiveのコンストラクタの引数の一番外側で行わなければならない
+%つまり、
+%その上で、この証明は次のように行った。証明中のcofixで、、、証明の中では、、、からguarded conditionを
+%満たしていることがわかる。
+%each recursive call in the definition must be protected by at least one constructor, and only by constructors.
+
+
+ここでは、\coqin{wBisim_DLater}を例にどのように余帰納法の原理を用いて、\coqin{wBisim}に関する性質をCoq上で示したかについて
+説明する。
+
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
-Lemma wBisim_DLater A : forall (d : M A), wBisim (DLater d) d.
-Proof.
-cofix CIH => d.
-case: d => [a|d'].
-- apply : wBTerminate.
-  + by apply/TDLater/TDNow.
-  + by apply TDNow.
-- apply wBLater.
-  by apply CIH.
-Qed.
-\end{minted}
+  Lemma wBisim_DLater A : forall (d : M A), wBisim (DLater d) d.
+  \end{minted}
+
+Coqでは、帰納法で\coqin{fix}オペレーターを用いて証明項を構成するのと同様に、
+余帰納法では\coqin{cofix}オペレータを用いて証明項を構成する。
+つまり、この例では、\\
+\coqin{cofix CIH (d : M A) : Oeq (DLater d) d := |$\cdots$|}
+から始まる項を構成すればよい。
+さて、\coqin{cofix}に関する型規則は以下である\cite{ddd}。
+
+
+\begin{prooftree}
+  \AxiomC{$\Gamma \vdash B:Set$}
+  \AxiomC{$\Gamma, f:B \vdash N:B $}
+  \AxiomC{$\mathcal{C}\{ f, N \}$}
+  \RightLabel{\text{CoFix}}
+  \TrinaryInfC{$\Gamma \vdash \text{CoFix} \, f:B := N:B$}
+\end{prooftree}
+
+ただし、CoIを余帰納的に定義された型、PをCoIのパラメーター、$ B := \Pi_{z:Z} (CoI \, P \, (z))$
+$\mathcal{C}\{ f, N \}$をfとNに関する条件とする。この条件は構文的ガード制約と呼ばれ、
+Nに関して帰納的に定義される。特に次のような性質を満たす\cite{ddd}
+\begin{itemize}
+  \item Nはコンストラクターを含まなければならない。
+  \item 余再帰呼び出しfはコンストラクターの内側で行われ、その外側では、場合わけとラムダ抽象しか行われていない。
+\end{itemize}
+さて、このことに注意して、次のように証明を行った。\\
+cofixタクティックで、余再帰呼び出しである\coqin{apply CIH}は、コンストラクター\coqin{wBLater}
+の内側で行われており、その前には\coqin{d}に関する場合わけしか行っていないため、確かに構文的ガード
+制約を満たす。
+
+\begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
+  Lemma wBisim_DLater A : forall (d : M A), wBisim (DLater d) d.
+  Proof.
+  cofix CIH => d.
+  case: d => [a|d'].
+  - apply : wBTerminate.
+    + by apply/TDLater/TDNow.
+    + by apply TDNow.
+  - apply wBLater.
+    by apply CIH.
+  Qed.
+  \end{minted}
 
 \subsection{Delayモナドのインターフェイス}
 以上のことを踏まえて、Delayモナドのインターフェイスを表1,2,3のように定義した。\\
@@ -272,7 +302,7 @@ while文全体として等しいことを表す。\\
 \end{table}
 
 \begin{table}
-  \caption{The laws of while}
+  \caption{The laws of DelayMonad}
   \centering
   \begin{tabular}{|l|l|}
     \hline
@@ -294,7 +324,7 @@ while文全体として等しいことを表す。\\
 Delayモナドのインターフェイスを定義することで、一般再帰関数に対する検証が可能になった。
 この手法をより多くの関数へ適用するためには、Delayモナドを他のモナドと組み合わせることにより
 複雑な副作用を表現する必要がある。そこで、\cite{practicalformalizationmonadicequational}
-において導入された型付きストアモナドとの組み合わせたdelay\_typed\_storemonadを定義した。
+において導入された型付きストアモナドとの組み合わせたdelayTypedstoremonadを定義した。
 
 \subsection{型付きストアモナド}
 型付きストアモナドは、Coqgen\cite{ValidatingOS}により変換したコードの、
@@ -391,7 +421,7 @@ Let factdts n := do r <- cnew ml_int 1;
                  do v <- cget r; Ret v.
             \end{minted}
 
-\section{setoid rewrite}
+\section{一般書き換え}
 Setoidライブラリは、ユーザーが独自に定義したパラメトリック同値関係に対するrewrite tacticの使用を
 可能にする。
 一般再帰関数に対する検証では、等式変形による検証ではなく、計算的な同値性であるwBisimに
@@ -401,8 +431,7 @@ Setoidライブラリは、ユーザーが独自に定義したパラメトリ�
 Add Parametric Relation A : (M A) (@wBisim M A)
   reflexivity proved by (@wBisim_refl M A)
   symmetry proved by (@wBisim_sym M A)
-  transitivity proved by (@wBisim_trans M A)
-  as wBisim_rel.
+  transitivity proved by (@wBisim_trans M A) as wBisim_rel.
         \end{minted}
 インターフェイスの規則であるbindmwBとbindfwB、whilewBがそれぞれ
 関数\coqin{bind}, \coqin{while}が同値関係\coqin{wBisim}を保つことを表している。
@@ -421,7 +450,7 @@ Add Parametric Morphism A B : bind
 
   Add Parametric Morphism A B : while
   with signature (pointwise_relation A (@wBisim M (B + A))) ==>
-  @eq A ==> (@wBisim M B ) as whilemor.
+    @eq A ==> (@wBisim M B ) as whilemor.
   \end{minted}
 これにより、Monaeを用いた他の検証と同様なrewrite tacticsを中心とした証明が可能になった。
 \begin{figure}[h]
