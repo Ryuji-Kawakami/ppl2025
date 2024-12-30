@@ -286,21 +286,25 @@ cofixタクティックで、余再帰呼び出しである\coqin{apply CIH}は�
 \subsection{Delayモナドのインターフェイス}
 以上のことを踏まえて、Delayモナドのインターフェイスを表1,2,3のように定義した。\\
 まず、Delayモナドのオペレイターは、繰り返し処理を行う\coqin{while}である。また、計算の等さを表す関係である、
-\coqin{wBisim} \, $ \approx $と、それが同値関係であるという規則を導入する。\\
-また、\coqin{while}オペレーターに対する6つの規則を定義した。
-初めの3つの規則は、Complete elgot monadの定義を参考にした。\\
-fixpointEは、\coqin{while}によって、繰り返す処理をすることができることを表す規則である。\\
-naturalityEは、while文により行った計算結果を、次の処理に渡す場合、
-それを一つのwhile文により記述できることを表す。\\
-codiagonalEは、連続して入れ子になったwhile文を一つのwhile文にすることができることを表す。\\
-後半の3つの規則は、検証上有用であると考え導入した。\\
+\coqin{wBisim} \, $ \approx $を導入した。
+表1は\coqin{wBisim}に関する規則である。
+前半の3つの規則は、wBisimが同値関係であることを表している。
+後半の3つの規則は、検証上有用であると考え導入した。
 bindmwBはbindの引数が同じ計算結果を表しているのならば、fに渡した結果も同じ計算結果になることを表している。\\
 bindfwBは同じfとgが同じ計算をするならば、bindで同じ引数を渡した結果も同じ計算結果になることを表す。\\
 whilewBは、while文でその都度繰り返す処理が、計算的に等しいならば、
 while文全体として等しいことを表す。\\
 後半の3つの規則は、whileとbindが同値類を保つことを表している。
 したがって、パラメトリックモルフィズムとして登録することで、等式変形に近い証明を可能にした。
-詳細については4節で説明する。
+詳細については2.5節で説明する。
+\\
+表2は\coqin{while}オペレーターに関する規則である。
+Complete elgot monadの定義を参考にした。\\
+fixpointEは、\coqin{while}によって、繰り返す処理をすることができることを表す規則である。\\
+naturalityEは、while文により行った計算結果を、次の処理に渡す場合、
+それを一つのwhile文により記述できることを表す。\\
+codiagonalEは、連続して入れ子になったwhile文を一つのwhile文にすることができることを表す。\\
+
 これらの規則を用いた等式変形では、モデルにおいて、健全性を示した時のような余帰納法を用いた証明
 をする必要がなく、簡潔で直感的な検証が可能になる。
 
@@ -320,9 +324,13 @@ while文全体として等しいことを表す。\\
   \centering
   \begin{tabular}{|l|l|}
     \hline
-    \coqin{ wBisim_refl}  & \coqin{ a |\scalebox{0.8}{$\approx$}| a}                                                                       \\
-    \coqin{ wBisim_sym}   & \coqin{ a |\scalebox{0.8}{$\approx$}| b -> b |\scalebox{0.8}{$\approx$}| a}                                    \\
-    \coqin{ wBisim_trans} & \coqin{ a |\scalebox{0.8}{$\approx$}| b -> b |\scalebox{0.8}{$\approx$}| c -> a |\scalebox{0.8}{$\approx$}| c} \\
+    \coqin{wBisim_refl}  & \coqin{ a |\scalebox{0.8}{$\approx$}| a}                                                                       \\
+    \coqin{wBisim_sym}   & \coqin{ a |\scalebox{0.8}{$\approx$}| b -> b |\scalebox{0.8}{$\approx$}| a}                                    \\
+    \coqin{wBisim_trans} & \coqin{ a |\scalebox{0.8}{$\approx$}| b -> b |\scalebox{0.8}{$\approx$}| c -> a |\scalebox{0.8}{$\approx$}| c} \\
+    \coqin{bindmwB}      & \coqin{d1 |\scalebox{0.8}{$\approx$}| d2 -> d1 >>= f |\scalebox{0.8}{$\approx$}| d2>>= f}                      \\
+    \coqin{bindfwB}      & \coqin{(forall a, f a |\scalebox{0.8}{$\approx$}| g a) -> d >>= f |\scalebox{0.8}{$\approx$}| d >>= g}         \\
+    \coqin{whilewB}      & \coqin{(forall a, f a |\scalebox{0.8}{$\approx$}| g a) -> while f a |\scalebox{0.8}{$\approx$}| while g a}     \\
+
     \hline
   \end{tabular}
 \end{table}
@@ -332,18 +340,188 @@ while文全体として等しいことを表す。\\
   \centering
   \begin{tabular}{|l|l|}
     \hline
-    \coqin{fixpointE }   & \coqin{while f a |\scalebox{0.8}{$\approx$}| (f a) >>= (sum_rect Ret (while f)) }                          \\
-    \coqin{naturalityE } & \coqin{while f a >>= g |\scalebox{0.8}{$\approx$}|}                                                        \\
-                         & \coqin{while (fun y => (f y) >>=}                                                                          \\
-                         & \coqin{  (sum_rect (M |\#| inl o g) (M |\#| inr o Ret))) a}                                                \\
-    \coqin{codiagonalE } & \coqin{while ((M |\#| ((sum_rect  idfun inr))) o f ) a |\scalebox{0.8}{$\approx$}|}                        \\
-                         & \coqin{  while (while f) a}                                                                                \\
-    \coqin{bindmwB}      & \coqin{d1 |\scalebox{0.8}{$\approx$}| d2 -> d1 >>= f |\scalebox{0.8}{$\approx$}| d2>>= f}                  \\
-    \coqin{bindfwB}      & \coqin{(forall a, f a |\scalebox{0.8}{$\approx$}| g a) -> d >>= f |\scalebox{0.8}{$\approx$}| d >>= g}     \\
-    \coqin{whilewB}      & \coqin{(forall a, f a |\scalebox{0.8}{$\approx$}| g a) -> while f a |\scalebox{0.8}{$\approx$}| while g a} \\
+    \coqin{fixpointE }   & \coqin{while f a |\scalebox{0.8}{$\approx$}| (f a) >>= (sum_rect Ret (while f)) }   \\
+    \coqin{naturalityE } & \coqin{while f a >>= g |\scalebox{0.8}{$\approx$}|}                                 \\
+                         & \coqin{while (fun y => (f y) >>=}                                                   \\
+                         & \coqin{  (sum_rect (M |\#| inl o g) (M |\#| inr o Ret))) a}                         \\
+    \coqin{codiagonalE } & \coqin{while ((M |\#| ((sum_rect  idfun inr))) o f ) a |\scalebox{0.8}{$\approx$}|} \\
+                         & \coqin{  while (while f) a}                                                         \\
     \hline
   \end{tabular}
 \end{table}
+
+
+\subsection{一般書き換え}
+Setoidライブラリは、ユーザーが独自に定義したパラメトリック同値関係に対するrewrite tacticの使用を
+可能にする。
+一般再帰関数に対する検証では、等式変形による検証ではなく、計算的な同値性であるwBisimに
+関する等価性変形を行う必要がある。\\
+したがって、wBisimをパラメトリック同値関係としてインスタンス化した。
+\begin{minted}[escapeinside=||,bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
+Add Parametric Relation A : (M A) (@wBisim M A)
+  reflexivity proved by (@wBisim_refl M A)
+  symmetry proved by (@wBisim_sym M A)
+  transitivity proved by (@wBisim_trans M A) as wBisim_rel.
+        \end{minted}
+インターフェイスの規則であるbindmwBとbindfwB、whilewBがそれぞれ
+関数\coqin{bind}, \coqin{while}が同値関係\coqin{wBisim}を保つことを表している。
+したがって、\coqin{bind},\coqin{while}を Parametric morphismとしてインスタンス化した。
+定義の中に現れる\\
+\coqin{(pointwise_relation A (@wBisim M B))}とは関数の関係であって、
+任意の値に対して関数が同じ同値類の値を返すことを表す。
+これにより、図1,2のような書き換えが可能になる。
+さらに、\coqin{setoid_rewrite}を用いることで、束縛変数
+を含む項に関する書き換えが可能である。このこととついては、5.3節で具体的に説明する。
+
+\begin{minted}[escapeinside=||,bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
+Add Parametric Morphism A B : bind
+  with signature (@wBisim M A) ==>
+    (pointwise_relation A (@wBisim M B)) ==> (@wBisim M B) as bindmor.
+
+  Add Parametric Morphism A B : while
+  with signature (pointwise_relation A (@wBisim M (B + A))) ==>
+    @eq A ==> (@wBisim M B ) as whilemor.
+  \end{minted}
+これにより、Monaeを用いた他の検証と同様なrewrite tacticsを中心とした証明が可能になった。
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.38\textwidth}
+    \begin{minted}[escapeinside=||]{ssr}
+ H1 : d1 |$\approx$| d2
+ H2 : forall a, f |$\approx$| g
+| \xdotfill{1pt}[black] |
+ d1 >>= f |$\approx$ \, $\cdots$|
+  \end{minted}
+  \end{minipage}
+  \begin{minipage}{0.2\textwidth}
+    \begin{center}
+      \scalebox{1.1}{$\xRightarrow[\coqin{rewrite H1 H2.}]{}$}
+    \end{center}
+  \end{minipage}
+  \begin{minipage}{0.38\textwidth}
+    \begin{minted}[escapeinside=||]{ssr}
+H1 : d1 |$\approx$| d2
+H2 : forall a, f a |$\approx$| g a
+|\xdotfill{1pt}[black] |
+d2 >>= g |$\approx$ \, $\cdots$|
+  \end{minted}
+  \end{minipage}
+  \caption{rewrite with bind}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.38\textwidth}
+    \begin{minted}[escapeinside=||]{ssr}
+ H : forall a, f a |$\approx$| g a.
+| \xdotfill{1pt}[black] |
+ while f b |$\approx$ \, $\cdots$|
+  \end{minted}
+  \end{minipage}
+  \begin{minipage}{0.2\textwidth}
+    \begin{center}
+      \scalebox{1.1}{$\xRightarrow[\coqin{rewrite H.  }]{}$}
+    \end{center}
+  \end{minipage}
+  \begin{minipage}{0.38\textwidth}
+    \begin{minted}[escapeinside=||]{ssr}
+H : forall a, f a |$\approx$| g a.
+|\xdotfill{1pt}[black] |
+while g b |$\approx$ \, $\cdots$|
+  \end{minted}
+  \end{minipage}
+  \caption{rewrite with while}
+\end{figure}
+
+\iffalse
+  この内容はappendixに入れる？
+  \subsection{Monadの満たす等式}
+  モナドは、bindとreturnを持ち、表4の等式を満たす型クラスとして特徴づけられる。
+  \begin{table}[b]
+    \caption{The laws of the monad}
+    \centering
+    \begin{tabular}{|l|l|}
+      \hline
+      \coqin{bindretf} & \coqin{Ret a >>= f = f a}                            \\
+      \coqin{bindmret} & \coqin{m >>= Ret = Ret}                              \\
+      \coqin{bindA}    & \coqin{(m >>= f) >>= g = m >>= (fun x => f x >>= g)} \\
+      \hline
+    \end{tabular}
+  \end{table}
+
+
+  Monaeでは、各Monadをインスタンス化した際にこれらの等式と関連する補題を用いることができるようになる。
+  特にここでは、表4の等式を用いて検証する。
+
+\fi
+
+\subsection{マッカーシーの91関数に対する検証}
+
+遅延モナドのインターフェイスを用いた検証例として、再帰的に定義される関数であり、
+$m \leq 101$の時、必ず91を返すという性質をもつマッカーシーの91関数\coqin{mc91}を扱う。
+
+\begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ocaml}
+let rec mc91 m = if 100 < m then m - 10 else mc91 (mc91 (m+11))
+   \end{minted}
+
+$m \leq 100$の時、11足した値で二重に再帰するため、停止性がCoqでは直ちに
+判定できない関数である。\\
+したがって、mc91関数をdelayモナドを用いて表し、自然数$m \leq 100$について
+91が戻り値となることを示した。\\
+まず、\coqin{while}オペレーターを用いてmc91関数を用いて表す。残っている再帰の深さn、mが計算している値である。
+
+\begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
+Let mc91_body nm :=
+    match nm with (n, m) =>
+    if n==0 then ret (inl m)
+            else if m > 100
+                 then ret (inr(n.-1, m - 10))
+                 else ret (inr(n.+1, m + 11))
+    end.
+Let mc91 n m := while mc91_body (n.+1, m).
+    \end{minted}
+
+mc91関数が91を返すことを示す際、本質的な性質は、補題\coqin{mc91succE}である。
+この補題と、\coqin{mc91 n 101 |$\approx$| Ret 91}であることと、$ k =  90 - m $に関する帰納法により従う。
+
+\begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em, escapeinside=||]{ssr}
+Lemma mc91succE n m : 90 <= m < 101 -> mc91 n m |\scalebox{0.8}{$\approx$}| mc91 n (m.+1).
+\end{minted}
+
+さて、この補題を図1のように示した。
+
+\begin{figure}[H]
+  \centering
+  \begin{minted}[escapeinside=||,mathescape = true, frame = single]{ssr}
+mc91 n m
+ |$\llbracket$| rewrite /mc91. (*definition of mc91*) |$\rrbracket$|
+ | \scalebox{0.8}{$\approx$} | while mc91_body (n.+1, m)
+ |$\llbracket$| rewrite fixpointE. |$\rrbracket$|
+ | \scalebox{0.8}{$\approx$} | (if 100 < m then Ret (inr (n, m - 10))
+              else Ret (inr (n.+2, m + 11))) >>=
+                   sum_rect Ret (while mc91_body)
+ |$\llbracket$| rewrite ifN //. (* $ m \leq 100$ *)|$\rrbracket$|
+  |\scalebox{0.8}{$\approx$}| Ret (inr (n.+2, m + 11)) >>= sum_rect Ret (while mc91_body)
+ |$\llbracket$| rewrite bindretf /= fixpointE /=. |$\rrbracket$|
+  |\scalebox{0.8}{$\approx$}| while mc91_body (n.+2, m + 1)
+ |$\llbracket$| rewrite bindretf fixpointE /=. |$\rrbracket$|
+  |\scalebox{0.8}{$\approx$}| (if 100 < m + 11
+      then Ret (inr (n.+1, m + 11 - 10))
+      else Ret (inr (n.+3, m + 11 + 11))) >>=
+          sum_rect Ret (while mc91_body)
+  |$\llbracket$| rewrite ltn_add2r ifT //. (* $90 \leq m \implies 100 < m + 11 $ *) |$\rrbracket$|
+  Ret (inr (n.+1, m + 11 - 10)) >>= sum_rect Ret (while mc91_body)
+ |$\llbracket$| rewrite  bindretf fixpointE /= fixpointE. |$\rrbracket$|
+  |\scalebox{0.8}{$\approx$}|  while mc91_body (n.+1, m + 11 - 10) = mc91 n (m+1)
+    \end{minted}
+  \caption{proof of mc91 }
+\end{figure}
+
+
+
+
+
+
 
 \section{型付きストアモナドとの組み合わせ}
 
@@ -428,12 +606,10 @@ Let whileDE (body : A -> DE (B + A)) : DE B := while (DEA o body)
 Let wBisimDE (d1 d2 : DE A) := wBisim d1 d2.
         \end{minted}
 
-\subsection{定義できる関数の例}
+\subsection{検証の具合例}
 \coqin{M : delay_typed_storemonad}を用いることで、参照に関する
 操作とwhileを用いた繰り返しを含むプログラムを表現可能である。\\
 例えば、参照とwhile文を用いて階乗を計算するプログラム\coqin{factdts}を以下のように定義できる。
-
-
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 Let factdts_aux_body r n : M (unit + nat) :=
   do v <- cget r;
@@ -446,172 +622,7 @@ Let factdts n := do r <- cnew ml_int 1;
                  do _ <- factdts_aux n r ;
                  do v <- cget r; Ret v.
             \end{minted}
-
-\section{一般書き換え}
-Setoidライブラリは、ユーザーが独自に定義したパラメトリック同値関係に対するrewrite tacticの使用を
-可能にする。
-一般再帰関数に対する検証では、等式変形による検証ではなく、計算的な同値性であるwBisimに
-関する等価性変形を行う必要がある。\\
-したがって、wBisimをパラメトリック同値関係としてインスタンス化した。
-\begin{minted}[escapeinside=||,bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
-Add Parametric Relation A : (M A) (@wBisim M A)
-  reflexivity proved by (@wBisim_refl M A)
-  symmetry proved by (@wBisim_sym M A)
-  transitivity proved by (@wBisim_trans M A) as wBisim_rel.
-        \end{minted}
-インターフェイスの規則であるbindmwBとbindfwB、whilewBがそれぞれ
-関数\coqin{bind}, \coqin{while}が同値関係\coqin{wBisim}を保つことを表している。
-したがって、\coqin{bind},\coqin{while}を Parametric morphismとしてインスタンス化した。
-定義の中に現れる\\
-\coqin{(pointwise_relation A (@wBisim M B))}とは関数の関係であって、
-任意の値に対して関数が同じ同値類の値を返すことを表す。
-これにより、図1,2のような書き換えが可能になる。
-さらに、\coqin{setoid_rewrite}を用いることで、束縛変数
-を含む項に関する書き換えが可能である。このこととついては、5.3節で具体的に説明する。
-
-\begin{minted}[escapeinside=||,bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
-Add Parametric Morphism A B : bind
-  with signature (@wBisim M A) ==>
-    (pointwise_relation A (@wBisim M B)) ==> (@wBisim M B) as bindmor.
-
-  Add Parametric Morphism A B : while
-  with signature (pointwise_relation A (@wBisim M (B + A))) ==>
-    @eq A ==> (@wBisim M B ) as whilemor.
-  \end{minted}
-これにより、Monaeを用いた他の検証と同様なrewrite tacticsを中心とした証明が可能になった。
-\begin{figure}[h]
-  \centering
-  \begin{minipage}{0.38\textwidth}
-    \begin{minted}[escapeinside=||]{ssr}
- H1 : d1 |$\approx$| d2
- H2 : forall a, f |$\approx$| g
-| \xdotfill{1pt}[black] |
- d1 >>= f |$\approx$ \, $\cdots$|
-  \end{minted}
-  \end{minipage}
-  \begin{minipage}{0.2\textwidth}
-    \begin{center}
-      \scalebox{1.1}{$\xRightarrow[\coqin{rewrite H1 H2.}]{}$}
-    \end{center}
-  \end{minipage}
-  \begin{minipage}{0.38\textwidth}
-    \begin{minted}[escapeinside=||]{ssr}
-H1 : d1 |$\approx$| d2
-H2 : forall a, f a |$\approx$| g a
-|\xdotfill{1pt}[black] |
-d2 >>= g |$\approx$ \, $\cdots$|
-  \end{minted}
-  \end{minipage}
-  \caption{rewrite with bind}
-\end{figure}
-
-\begin{figure}[h]
-  \centering
-  \begin{minipage}{0.38\textwidth}
-    \begin{minted}[escapeinside=||]{ssr}
- H : forall a, f a |$\approx$| g a.
-| \xdotfill{1pt}[black] |
- while f b |$\approx$ \, $\cdots$|
-  \end{minted}
-  \end{minipage}
-  \begin{minipage}{0.2\textwidth}
-    \begin{center}
-      \scalebox{1.1}{$\xRightarrow[\coqin{rewrite H.  }]{}$}
-    \end{center}
-  \end{minipage}
-  \begin{minipage}{0.38\textwidth}
-    \begin{minted}[escapeinside=||]{ssr}
-H : forall a, f a |$\approx$| g a.
-|\xdotfill{1pt}[black] |
-while g b |$\approx$ \, $\cdots$|
-  \end{minted}
-  \end{minipage}
-  \caption{rewrite with while}
-\end{figure}
-
-\section{検証の具体例}
-ここでは、Delayモナドのインターフェイスを用いた検証の具体例を紹介する。
-
-\subsection{Monadの満たす等式}
-モナドは、bindとreturnを持ち、表4の等式を満たす型クラスとして特徴づけられる。
-\begin{table}[b]
-  \caption{The laws of the monad}
-  \centering
-  \begin{tabular}{|l|l|}
-    \hline
-    \coqin{bindretf} & \coqin{Ret a >>= f = f a}                            \\
-    \coqin{bindmret} & \coqin{m >>= Ret = Ret}                              \\
-    \coqin{bindA}    & \coqin{(m >>= f) >>= g = m >>= (fun x => f x >>= g)} \\
-    \hline
-  \end{tabular}
-\end{table}
-
-Monaeでは、各Monadをインスタンス化した際にこれらの等式と関連する補題を用いることができるようになる。
-特にここでは、表4の等式を用いて検証する。
-
-\subsection{マッカーシーの91関数に対する検証}
-マッカーシーの91関数mc91は、再帰的に定義される関数であり、$m \leq 101$の時、
-必ず91を返すという性質をもつ関数である。
-
-\begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ocaml}
-let rec mc91 m = if 100 < m then m - 10 else mc91 (mc91 (m+11))
-   \end{minted}
-
-$m \leq 100$の時、11足した値で二重に再帰するため、停止性がCoqでは直ちに
-判定できない関数である。\\
-したがって、mc91関数をdelayモナドを用いて表し、自然数$m \leq 100$について
-91が戻り値となることを示した。\\
-まず、\coqin{while}オペレーターを用いてmc91関数を用いて表す。残っている再帰の深さn、mが計算している値である。
-
-\begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
-Let mc91_body nm :=
-    match nm with (n, m) =>
-    if n==0 then ret (inl m)
-            else if m > 100
-                 then ret (inr(n.-1, m - 10))
-                 else ret (inr(n.+1, m + 11))
-    end.
-Let mc91 n m := while mc91_body (n.+1, m).
-    \end{minted}
-
-mc91関数が91を返すことを示す際、本質的な性質は、補題\coqin{mc91succE}である。
-この補題と、\coqin{mc91 n 101 |$\approx$| Ret 91}であることと、$ k =  90 - m $に関する帰納法により従う。
-
-\begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em, escapeinside=||]{ssr}
-Lemma mc91succE n m : 90 <= m < 101 -> mc91 n m |\scalebox{0.8}{$\approx$}| mc91 n (m.+1).
-\end{minted}
-
-さて、この補題を図1のように示した。
-
-\begin{figure}[H]
-  \centering
-  \begin{minted}[escapeinside=||,mathescape = true, frame = single]{ssr}
-mc91 n m
- |$\llbracket$| rewrite /mc91. (*definition of mc91*) |$\rrbracket$|
- | \scalebox{0.8}{$\approx$} | while mc91_body (n.+1, m)
- |$\llbracket$| rewrite fixpointE. |$\rrbracket$|
- | \scalebox{0.8}{$\approx$} | (if 100 < m then Ret (inr (n, m - 10))
-              else Ret (inr (n.+2, m + 11))) >>=
-                   sum_rect Ret (while mc91_body)
- |$\llbracket$| rewrite ifN //. (* $ m \leq 100$ *)|$\rrbracket$|
-  |\scalebox{0.8}{$\approx$}| Ret (inr (n.+2, m + 11)) >>= sum_rect Ret (while mc91_body)
- |$\llbracket$| rewrite bindretf /= fixpointE /=. |$\rrbracket$|
-  |\scalebox{0.8}{$\approx$}| while mc91_body (n.+2, m + 1)
- |$\llbracket$| rewrite bindretf fixpointE /=. |$\rrbracket$|
-  |\scalebox{0.8}{$\approx$}| (if 100 < m + 11
-      then Ret (inr (n.+1, m + 11 - 10))
-      else Ret (inr (n.+3, m + 11 + 11))) >>=
-          sum_rect Ret (while mc91_body)
-  |$\llbracket$| rewrite ltn_add2r ifT //. (* $90 \leq m \implies 100 < m + 11 $ *) |$\rrbracket$|
-  Ret (inr (n.+1, m + 11 - 10)) >>= sum_rect Ret (while mc91_body)
- |$\llbracket$| rewrite  bindretf fixpointE /= fixpointE. |$\rrbracket$|
-  |\scalebox{0.8}{$\approx$}|  while mc91_body (n.+1, m + 11 - 10) = mc91 n (m+1)
-    \end{minted}
-  \caption{proof of mc91 }
-\end{figure}
-
-\subsection{状態を用いたfactorial}
-3.3節で定義した\coqin{factdts}について、実際に階乗を計算していること
+\coqin{factdts}について、実際に階乗を計算していること
 を検証する。つまり次\coqin{factn}と計算として一致することを示した。
 
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
@@ -647,7 +658,7 @@ cget r >>= (fun s => cput r (1 * s) >> Ret tt)
 
 n = n' + 1の時の証明の際、\coqin{setoid_rewrite IH}の部分では、
 束縛変数を含む項に対する\coqin{wBisim}に関する等価性変形を行っている。これは、
-第3節で説明したように、bindをパラメトリックモルフィズムとして、インスタンス化
+第2.5節で説明したように、bindをパラメトリックモルフィズムとして、インスタンス化
 しているため、行うことができる。
 
 \begin{figure}[H]
@@ -711,7 +722,6 @@ cget r >>= (fun s => cput r (n'.+1 * fact n' * s) >> Ret tt)
 
 \end{minted}
 \fi
-
 \section{関連研究}
 \subsection{一般再帰関数に対するCoq上での検証}
 \cite{10.1145/3371119}は、coinductive typeを用いて定義されたデータ構造ITreeを用いて
