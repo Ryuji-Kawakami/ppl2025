@@ -75,7 +75,7 @@ Coqの\coqin{Fixpoint}コマンドでは、引数の持つ整礎な順序関係�
 証明とともに定義する必要がある。\\
 例えば、複雑な再帰を行うマッカーシーの91関数はCoqでは直ちに定義することはできない。
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ocaml}
-  let rec mc91 m = if 100 < m then m - 10 else mc91 (mc91 (m+11))
+let rec mc91 m = if 100 < m then m - 10 else mc91 (mc91 (m+11))
 \end{minted}
 さらには、停止性の未解決なコラッツ関数などは再帰関数として定義することはできない。
 %停止性の証明なしに扱える　さらに、構造
@@ -121,13 +121,13 @@ complete elgot monadとなることが知られている\cite{10.1007/978-3-319-
 例えば、参照とwhile文を用いて階乗を計算する\mintinline{ocaml}|factorial| は
 遅延モナドだけでは表現できない。
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ocaml}
-  let factorial n =
-    let r = ref 1 in
-    let l = ref n in
-    while !l != 0 do
-    r := !r * !l;
-    l := !l - 1;
-    done;
+let factorial n =
+  let r = ref 1 in
+  let l = ref n in
+  while !l != 0 do
+  r := !r * !l;
+  l := !l - 1;
+  done;
 \end{minted}
 そこで、本研究では、複数のモナドを変換により組み合わせることができる
 モナドトランスフォーマーを用いて、例外モナドや、ocamlの参照を表現する
@@ -258,7 +258,7 @@ Coqでは、帰納法で\coqin{fix}オペレーターを用いて証明項を構
   \TrinaryInfC{$\Gamma \vdash \text{CoFix} \, f:B := N:B$}
 \end{prooftree}
 
-ただし、CoIを余帰納的に定義された型、PをCoIのパラメーター、$ B := \Pi_{z:Z} (CoI \, P \, (z))$
+ただし、CoIを余帰納的に定義された型、PをCoIのパラメーター、$ B := \Pi_{z:Z} (\text{CoI} \, P \, (z))$
 $\mathcal{C}\{ f, N \}$をfとNに関する条件とする。この条件は構文的ガード制約と呼ばれ、
 Nに関して帰納的に定義される。特に次のような性質を満たす
 \begin{itemize}
@@ -304,11 +304,10 @@ fixpointEは、\coqin{while}によって、繰り返す処理をすることが�
 naturalityEは、while文により行った計算結果を、次の処理に渡す場合、
 それを一つのwhile文により記述できることを表す。\\
 codiagonalEは、連続して入れ子になったwhile文を一つのwhile文にすることができることを表す。\\
-
 これらの規則を用いた等式変形では、モデルにおいて、健全性を示した時のような余帰納法を用いた証明
 をする必要がなく、簡潔で直感的な検証が可能になる。
 
-\begin{table}
+\begin{table}[H]
   \caption{The operator and relation}
   \centering
   \begin{tabular}{|c|}
@@ -319,7 +318,7 @@ codiagonalEは、連続して入れ子になったwhile文を一つのwhile文�
   \end{tabular}
 \end{table}
 
-\begin{table}
+\begin{table}[H]
   \caption{The laws of the wBisim}
   \centering
   \begin{tabular}{|l|l|}
@@ -330,12 +329,11 @@ codiagonalEは、連続して入れ子になったwhile文を一つのwhile文�
     \coqin{bindmwB}      & \coqin{d1 |\scalebox{0.8}{$\approx$}| d2 -> d1 >>= f |\scalebox{0.8}{$\approx$}| d2>>= f}                      \\
     \coqin{bindfwB}      & \coqin{(forall a, f a |\scalebox{0.8}{$\approx$}| g a) -> d >>= f |\scalebox{0.8}{$\approx$}| d >>= g}         \\
     \coqin{whilewB}      & \coqin{(forall a, f a |\scalebox{0.8}{$\approx$}| g a) -> while f a |\scalebox{0.8}{$\approx$}| while g a}     \\
-
     \hline
   \end{tabular}
 \end{table}
 
-\begin{table}
+\begin{table}[H]
   \caption{The laws of DelayMonad}
   \centering
   \begin{tabular}{|l|l|}
@@ -349,7 +347,6 @@ codiagonalEは、連続して入れ子になったwhile文を一つのwhile文�
     \hline
   \end{tabular}
 \end{table}
-
 
 \subsection{一般書き換え}
 Setoidライブラリは、ユーザーが独自に定義したパラメトリック同値関係に対するrewrite tacticの使用を
@@ -516,12 +513,6 @@ mc91 n m
     \end{minted}
   \caption{proof of mc91 }
 \end{figure}
-
-
-
-
-
-
 
 \section{型付きストアモナドとの組み合わせ}
 
