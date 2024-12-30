@@ -72,11 +72,14 @@ Hierarchy Builder\cite{cohen:hal-02478907}を用いて実装することで、
 定理証明支援系では無矛盾性の保証のため、停止しない関数を定義できない。
 Coqの\coqin{Fixpoint}コマンドでは、引数の持つ整礎な順序関係が構文的に自明な構造的再帰関数については定義できる。
 そうでないときは、\coqin{Equation}コマンドなどを用いて引数が整礎な順序関係を持ち減少する値であることの
-証明とともに定義する必要がある。
+証明とともに定義する必要がある。\\
+例えば、複雑な再帰を行うマッカーシーの91関数はCoqでは直ちに定義することはできない。
+\begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ocaml}
+  let rec mc91 m = if 100 < m then m - 10 else mc91 (mc91 (m+11))
+\end{minted}
+さらには、停止性の未解決なコラッツ関数などは再帰関数として定義することはできない。
 %停止性の証明なしに扱える　さらに、構造
 %一般再帰が扱える　さらに、quick sortなども
-さらに非決定性を持つquicksortなどのプログラムでは、引数が減少することを証明することはできず、
-dependently-typed assertion\cite{d}などの工夫が必要になる。
 %また、停止性の未解決なコラッツ関数などは定義することができない。
 %interaction treeを全面的に出す?
 \paragraph{CoInductive typeを用いた一般再帰関数の定義}
@@ -112,6 +115,25 @@ $(\_^{\dagger})$に関する4つの公理を満たすモナドとして定義さ
 Delayモナドは有限回の計算ステップを無視する同一視を行うことで
 complete elgot monadとなることが知られている\cite{10.1007/978-3-319-67729-3_3}。
 %\subsection{Typed store monad transformer}
+
+\paragraph{モナドトランスフォーマーを用いた計算効果の合成}
+遅延モナドを用いることで、一般再帰関数を扱えるが純粋な関数に限られる。
+例えば、参照とwhile文を用いて階乗を計算する\mintinline{ocaml}|factorial| は
+遅延モナドだけでは表現できない。
+\begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ocaml}
+  let factorial n =
+    let r = ref 1 in
+    let l = ref n in
+    while !l != 0 do
+    r := !r * !l;
+    l := !l - 1;
+    done;
+\end{minted}
+そこで、本研究では、複数のモナドを変換により組み合わせることができる
+モナドトランスフォーマーを用いて、例外モナドや、ocamlの参照を表現する
+ために導入された型付きストアモナド\cite{ddd}と組み合わせることで、
+複数の計算効果をもつプログラムに対するMonaeを用いた検証を可能にした。
+
 
 \paragraph{本稿の貢献と構成}
 本稿の貢献は以下のようにまとめられる。
