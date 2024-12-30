@@ -131,7 +131,7 @@ complete elgot monadとなることが知られている\cite{10.1007/978-3-319-
 \end{minted}
 そこで、本研究では、複数のモナドを変換により組み合わせることができる
 モナドトランスフォーマーを用いて、例外モナドや、ocamlの参照を表現する
-ために導入された型付きストアモナド\cite{ddd}と組み合わせることで、
+ために導入された型付きストアモナド\cite{affeldt2023practicalformalizationmonadicequational}と組み合わせることで、
 複数の計算効果をもつプログラムに対するMonaeを用いた検証を可能にした。
 
 
@@ -186,6 +186,10 @@ CoFixpoint while {A B} (body: A -> M (B + A)) : A -> M B :=
                                    |inr a => DLater (while body a)
                                    |inl b => DNow b end).
 \end{minted}
+また、\coqin{while}オペレーターを用いて再帰関数の定義が行えることが知られている。
+\cite{recursion_from_iteration}では、継続を用いて、\coqin{while}オペレーターから不動点オペレーターを定義している。
+
+
 %CoFixpointに関する説明を詳しく？
 \subsection{計算的同値性}
 さて、ここで等式変形による検証は、Delayモナドを用いて表したプログラムに対しては適さない。
@@ -243,7 +247,7 @@ Coqでは、帰納法で\coqin{fix}オペレーターを用いて証明項を構
 つまり、この例では、\\
 \coqin{cofix CIH (d : M A) : Oeq (DLater d) d := |$\cdots$|}
 から始まる項を構成すればよい。
-さて、\coqin{cofix}に関する型規則は以下である\cite{ddd}。
+さて、\coqin{cofix}に関する型規則は以下である\cite{10.1007/3-540-60579-7_3}。
 
 
 \begin{prooftree}
@@ -256,7 +260,7 @@ Coqでは、帰納法で\coqin{fix}オペレーターを用いて証明項を構
 
 ただし、CoIを余帰納的に定義された型、PをCoIのパラメーター、$ B := \Pi_{z:Z} (CoI \, P \, (z))$
 $\mathcal{C}\{ f, N \}$をfとNに関する条件とする。この条件は構文的ガード制約と呼ばれ、
-Nに関して帰納的に定義される。特に次のような性質を満たす\cite{ddd}
+Nに関して帰納的に定義される。特に次のような性質を満たす
 \begin{itemize}
   \item Nはコンストラクターを含まなければならない。
   \item 余再帰呼び出しfはコンストラクターの内側で行われ、その外側では、場合わけとラムダ抽象しか行われていない。
