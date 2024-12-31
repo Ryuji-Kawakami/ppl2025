@@ -31,7 +31,7 @@
 \newcommand{\ret}{\rm{return}}
 \newcommand{\binds}{ \gg = }
 
-\title{Delayモナドを用いた一般再帰関数に対する等式変形による検証}
+\title{遅延モナドを用いた一般再帰関数に対する等式変形による検証}
 \author{川上　竜司, Jacques Garrigue, 才川　隆文}
 \inst{ 名古屋大学多元数理学研究科\\
   \texttt{ \{ryuji.kawakami.c3, garrigue\}@math.nagoya-u.ac.jp, tscompor@gmail.com}}
@@ -41,9 +41,9 @@
   CoqのライブラリMonaeは、モナディック等式変形を用いてプログラムの計算効果に関する
   検証を可能にする。現在Monaeでは、状態モナドや確率モナドなど、様々なモナドを
   サポートすることで多様なプログラムを扱うことができるが、構造的でない再帰関数
-  の扱いが難しい。一方で、余帰納的に定義されるDelayモナド
+  の扱いが難しい。一方で、余帰納的に定義される遅延モナド
   を用いると一般再帰関数を表現できることが知られている。
-  本研究では、Delayモナドに対するwhileを用いた適切なインターフェイスを定義し、
+  本研究では、遅延モナドに対するwhileを用いた適切なインターフェイスを定義し、
   その健全性を形式的に証明することで、Monaeを用いた一般再帰関数に対する検証を可能にした。
   また、モナドトランスフォーマーを用いて他のモナドと組み合わせることで、計算効果を含みうるより
   一般的なプログラムに対するMonaeを用いた検証を可能にする。
@@ -51,8 +51,8 @@
 
 \section{初めに}
 純粋関数型プログラムはその参照等価性としての性質から、等式変形による検証に適している。
-さらには、モナドと呼ばれる構造を用いることで、計算効果を表すことができ、Haskellをはじめとした
-様々な関数型プログラミング言語において採用されている。
+さらには、モナドと呼ばれる構造を用いることで、計算効果を表すことができ、関数型プログラミング言語Haskell
+をはじめとした様々な言語において採用されている。
 Gibbonsらは、モナドの持つ代数的な性質に着目し、それぞれのモナドのインターフェイスを、等式の
 集まりとして定義することで、計算効果の持つプログラムに関する等式変形による検証、モナディック等式変形を
 提案した\cite{10.1145/2034574.2034777}。
@@ -60,10 +60,11 @@ Gibbonsらは、モナドの持つ代数的な性質に着目し、それぞれ�
 
 
 \paragraph{Monae}
-定理証明支援系Coqでモナディック等式変形を用いた検証を可能にするツールはMonae\cite{monae}である。
+定理証明支援系Coq\cite{Coq}でモナディック等式変形を用いた検証を可能にするツールはMonae\cite{monae}である。
 Monaeは、モナディック等式変形を行うための等式の集まりであるインターフェイスと、
 その健全性を保証するモデルから構成される。
-Coqを用いることで、検証の正しさを保証し、MathComp/SSReflectを用いた簡潔な証明が可能になる。
+Coqを用いることで、検証の正しさを保証し、Coqの数学ライブラリMathComp/SSReflect\cite{Gonthier_Mahboubi_2010}
+を用いた簡潔な証明が可能になる。
 Monaeでは、モナディック等式変形で必要となるインターフェイスの階層を
 Hierarchy Builder\cite{cohen:hal-02478907}を用いて実装することで、
 複数のモナドの組み合わせや、再利用可能な構造的な証明を可能にする。
@@ -83,21 +84,20 @@ let rec mc91 m = if 100 < m then m - 10 else mc91 (mc91 (m+11))
 %また、停止性の未解決なコラッツ関数などは定義することができない。
 %interaction treeを全面的に出す?
 \paragraph{CoInductive typeを用いた一般再帰関数の定義}
-定理証明支援系で構造的でない再帰関数を扱う他の方法として、余帰納的定義を用いる手法がある。
-余帰納的定義は無限長のリストであるストリームなど無限個のコンストラクターを持つデータを定義する際に用いられる。
-Coqでは、生産性条件を満たす限り、無限にコンストラクターを適用することができるため、
+定理証明支援系で構造的でない再帰関数を扱う他の方法として、無限個のコンストラクターを持つデータを
+定義する際に用いられる余帰納的定義を用いる手法がある。
+Coqでは、ガード制約を満たす限り、無限にコンストラクターを適用することができるため、
 それを用いて無条件な再帰呼び出しを行い、構造的でない再帰関数を扱うことができる。
-それらの関数は、戻り値が余帰納的データとなるが、停止性の証明なしに定義することができる。\\
-例えば、停止性の未解決なコラッツ関数を定義することが可能である。
+それらの関数は、戻り値が余帰納型データとなるが、停止性の証明なしに定義することができる。\\
 %例えば、\cite{10.1145/3371119}では、coinductive typeを用いて定義されたデータ構造ITreeを用いて
 %インタラクションのある一般再帰関数を表現している。\\
-Delayモナド\cite{lmcs:2265}を用いるとそういった余再帰的な関数呼び出しを行うプログラムを
-モナディックプログラムとして表すことができる。
-したがって、本研究では、Delayモナドに対する適切なインターフェイスを定義することで
+Caprettaらの提案した遅延モナド\cite{lmcs:2265}を用いるとそういった余再帰的な関数呼び出し
+を行うプログラムをモナディックプログラムとして表すことができる。
+したがって、本研究では、遅延モナドに対する適切なインターフェイスを定義することで
 Monaeを用いた停止性の保証できない一般再帰関数に対する検証を試みた。
 %\subsection{interaction treeにおける構造的でない再帰関数の扱い}
 \paragraph{Complete elgot monad}
-Delayモナドのインターフェイスを定義するにあたって、complete elgot monad\cite{ADAMEK20101306}
+遅延モナドのインターフェイスを定義するにあたって、complete elgot monad\cite{ADAMEK20101306}
 を参考にした。
 complete elgot monadは、代数的に再帰構造を扱うiteration theory\cite{1993Bloom}に
 対応しており、イテレーションと呼ばれる、
@@ -112,7 +112,7 @@ $(\_^{\dagger})$に関する4つの公理を満たすモナドとして定義さ
   }
 \]
 この規則は関数fがAの値を返すまで繰り返し計算を行った結果が、$f^{\dagger}$に等しいことを表している。\\
-Delayモナドは有限回の計算ステップを無視する同一視を行うことで
+遅延モナドは有限回の計算ステップを無視する同一視を行うことで
 complete elgot monadとなることが知られている\cite{10.1007/978-3-319-67729-3_3}。
 %\subsection{Typed store monad transformer}
 
@@ -134,29 +134,28 @@ let factorial n =
 ために導入された型付きストアモナド\cite{affeldt2023practicalformalizationmonadicequational}と組み合わせることで、
 複数の計算効果をもつプログラムに対するMonaeを用いた検証を可能にした。
 
-
 \paragraph{本稿の貢献と構成}
 本稿の貢献は以下のようにまとめられる。
 \begin{itemize}
-  \item Delayモナドの計算的同値性に関する規則を含むインターフェイスを定義し、その健全性を
+  \item 遅延モナドの計算的同値性に関する規則を含むインターフェイスを定義し、その健全性を
         形式的に示すことで、一般再帰関数に関する検証をMonaeで行うことを可能にした。
-  \item モナドトランスフォーマーを用いた他のモナドとの組み合わせやsetoidライブラリを用いたgeneralized rewrite tactics の利用により
-        一般再帰関数に関するMonaeによる検証の有用性を高めた。
+  \item モナドトランスフォーマーを用いた他のモナドとの組み合わせや一般項書き換え
+        を可能にするsetoidライブラリを用いることで一般再帰関数に関するMonaeによる検証の有用性を高めた。
 \end{itemize}
-以下、2節でDelayモナドのインターフェイスの詳細ついて、3節で型付きストアモナドとの組み合わせについて、
-4節でsetoidライブラリを用いたgeneralized rewrite tacticsについて、5節で検証の具体例について説明する。
-また6節で関連研究について、7節でまとめと課題について論じる。
+以下、2節で遅延モナドのインターフェイスの詳細ついて、3節で型付きストアモナドとの組み合わせについて、
+説明する。
+また4節で関連研究について、5節でまとめと課題について論じる。
 なお、本研究のコードは以下のulrから確認することができる。\\
 \begin{center}
   \url{https://github.com/Ryuji-Kawakami/monae/tree/delaypull}
 \end{center}
 
-\section{DelayモナドのMonaeにおける実装}
-\subsection{Delayモナドの定義}
+\section{遅延モナドのMonaeにおける実装}
+\subsection{遅延モナドの定義}
 %Cofixpointの説明？
-Delayモナドは、余帰納的に定義されることで
+遅延モナドは、余帰納的に定義されることで
 停止しない関数の計算を表現することが可能である。\\
-Delayモナドを構成する関手Delayは、(A:Type) $\rightarrow$ (\text{cofixpoint} of X = A + X )
+遅延モナドを構成する関手Delayは、(A:Type) $\rightarrow$ (\text{cofixpoint} of X = A + X )
 という型を持つ関数である。
 Coqでは、\coqin{CoInductive}コマンドと、各最大不動点への埋め込みを表すコンストラクター\coqin{DNow}, \coqin{DLater}
 を用いて定義することができる。
@@ -165,7 +164,7 @@ CoInductive Delay (A : Type) : Type :=
   |DNow : A -> Delay A
   |DLater : Delay A -> Delay A.
 \end{minted}
-Delayモナドのreturnオペレーターは、コンストラクタ\coqin{DNow}であり、
+遅延モナドのreturnオペレーターは、コンストラクタ\coqin{DNow}であり、
 bindオペレーターは\coqin{CoFixpoint}コマンドを用いて定義される。
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 Let ret (a:A) := DNow a
@@ -175,8 +174,8 @@ CoFixpoint bind (m: Delay A) (f: A -> Delay B ) :=
   |DLater d => DLater (bind d f)
   end.
 \end{minted}
-さて、Delayモナドに付随するオペレーターとして、繰り返し処理を行うwhileを定義する。
-while オペレーターはcomplete elgot monadの$\dagger$オペレーターに相当する。\\
+さて、遅延モナドに付随するオペレーターとして、繰り返し処理を行う\coqin{while}を定義する。
+\coqin{while}オペレーターはcomplete elgot monadの$\dagger$オペレーターに相当する。\\
 \coqin{CoFixpoint}コマンドを用いて定義され、右埋め込みの値\mintinline{ssr}|inr a|が値a
 での繰り返しの継続、左埋め込みの値\mintinline{ssr}|inl b|が値bを戻り値とする繰り返し
 の終了を表す。
@@ -186,13 +185,14 @@ CoFixpoint while {A B} (body: A -> M (B + A)) : A -> M B :=
                                    |inr a => DLater (while body a)
                                    |inl b => DNow b end).
 \end{minted}
-また、\coqin{while}オペレーターを用いて再帰関数の定義が行えることが知られている。
-\cite{recursion_from_iteration}では、継続を用いて、\coqin{while}オペレーターから不動点オペレーターを定義している。
+また、\coqin{while}オペレーターを用いて不動点オペレーターの定義が行えることが知られている。
+\cite{recursion_from_iteration}では、継続を用いて、\coqin{while}オペレーターから
+不動点オペレーターを定義している。
 
 
 %CoFixpointに関する説明を詳しく？
 \subsection{計算的同値性}
-さて、ここで等式変形による検証は、Delayモナドを用いて表したプログラムに対しては適さない。
+さて、ここで等式変形による検証は、遅延モナドを用いて表したプログラムに対しては適さない。
 例えば、階乗を計算する関数\coqin{fact}をDelayモナドを用いて定義した場合、\coqin{fact 3}は
 明示的な計算ステップ\coqin{DLater}を3つ含むため、\coqin{DNow 6}と一致しないためである。
 したがって、計算的な同値性を表す関係が必要である。
@@ -235,8 +235,8 @@ CoInductive wBisim A : Delay A -> Delay A -> Prop :=
 %each recursive call in the definition must be protected by at least one constructor, and only by constructors.
 
 
-ここでは、\coqin{wBisim_DLater}を例にどのように余帰納法の原理を用いて、\coqin{wBisim}に関する性質をCoq上で示したかについて
-説明する。
+ここでは、\coqin{wBisim_DLater}を例にどのように余帰納法の原理を用いて、
+\coqin{wBisim}に関する性質をCoq上で示したかを説明する。
 
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
   Lemma wBisim_DLater A : forall (d : M A), wBisim (DLater d) d.
@@ -248,8 +248,6 @@ Coqでは、帰納法で\coqin{fix}オペレーターを用いて証明項を構
 \coqin{cofix CIH (d : M A) : Oeq (DLater d) d := |$\cdots$|}
 から始まる項を構成すればよい。
 さて、\coqin{cofix}に関する型規則は以下である\cite{10.1007/3-540-60579-7_3}。
-
-
 \begin{prooftree}
   \AxiomC{$\Gamma \vdash B:Set$}
   \AxiomC{$\Gamma, f:B \vdash N:B $}
@@ -259,11 +257,11 @@ Coqでは、帰納法で\coqin{fix}オペレーターを用いて証明項を構
 \end{prooftree}
 
 ただし、CoIを余帰納的に定義された型、PをCoIのパラメーター、$ B := \Pi_{z:Z} (\text{CoI} \, P \, (z))$
-$\mathcal{C}\{ f, N \}$をfとNに関する条件とする。この条件は構文的ガード制約と呼ばれ、
-Nに関して帰納的に定義される。特に次のような性質を満たす
+$\mathcal{C}\{ f, N \}$を$f$と$N$に関する条件とする。この条件は構文的ガード制約と呼ばれ、
+$N$に関して帰納的に定義される。特に次のような性質を満たす
 \begin{itemize}
-  \item Nはコンストラクターを含まなければならない。
-  \item 余再帰呼び出しfはコンストラクターの内側で行われ、その外側では、場合わけとラムダ抽象しか行われていない。
+  \item $N$はコンストラクターを含まなければならない。
+  \item 余再帰呼び出し$f$はコンストラクターの内側で行われ、その外側では、場合わけとラムダ抽象しか行われていない。
 \end{itemize}
 さて、このことに注意して、次のように証明を行った。\\
 cofixタクティックで、余再帰呼び出しである\coqin{apply CIH}は、コンストラクター\coqin{wBLater}
@@ -283,11 +281,11 @@ cofixタクティックで、余再帰呼び出しである\coqin{apply CIH}は�
   Qed.
   \end{minted}
 
-\subsection{Delayモナドのインターフェイス}
-以上のことを踏まえて、Delayモナドのインターフェイスを表1,2,3のように定義した。\\
-まず、Delayモナドのオペレイターは、繰り返し処理を行う\coqin{while}である。また、計算の等さを表す関係である、
+\subsection{遅延モナドのインターフェイス}
+以上のことを踏まえて、遅延モナドのインターフェイスを表1,2,3のように定義した。\\
+まず、遅延モナドのオペレイターは、繰り返し処理を行う\coqin{while}である。また、計算の等さを表す関係である、
 \coqin{wBisim} \, $ \approx $を導入した。
-表1は\coqin{wBisim}に関する規則である。
+表2は\coqin{wBisim}に関する規則である。
 前半の3つの規則は、wBisimが同値関係であることを表している。
 後半の3つの規則は、検証上有用であると考え導入した。
 bindmwBはbindの引数が同じ計算結果を表しているのならば、fに渡した結果も同じ計算結果になることを表している。\\
@@ -298,7 +296,7 @@ while文全体として等しいことを表す。\\
 したがって、パラメトリックモルフィズムとして登録することで、等式変形に近い証明を可能にした。
 詳細については2.5節で説明する。
 \\
-表2は\coqin{while}オペレーターに関する規則である。
+表3は\coqin{while}オペレーターに関する規則である。
 Complete elgot monadの定義を参考にした。\\
 fixpointEは、\coqin{while}によって、繰り返す処理をすることができることを表す規則である。\\
 naturalityEは、while文により行った計算結果を、次の処理に渡す場合、
@@ -349,9 +347,9 @@ codiagonalEは、連続して入れ子になったwhile文を一つのwhile文�
 \end{table}
 
 \subsection{一般書き換え}
-Setoidライブラリは、ユーザーが独自に定義したパラメトリック同値関係に対するrewrite tacticの使用を
-可能にする。
-一般再帰関数に対する検証では、等式変形による検証ではなく、計算的な同値性であるwBisimに
+ユーザーが独自に定義したパラメトリック同値関係に対するrewriteタクティックスの使用を
+Setoidライブラリは可能にする。
+一般再帰関数に対する検証では、等式変形による検証ではなく、計算的な同値性である\coqin{wBisim}に
 関する等価性変形を行う必要がある。\\
 したがって、wBisimをパラメトリック同値関係としてインスタンス化した。
 \begin{minted}[escapeinside=||,bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
@@ -361,11 +359,11 @@ Add Parametric Relation A : (M A) (@wBisim M A)
   transitivity proved by (@wBisim_trans M A) as wBisim_rel.
         \end{minted}
 インターフェイスの規則であるbindmwBとbindfwB、whilewBがそれぞれ
-関数\coqin{bind}, \coqin{while}が同値関係\coqin{wBisim}を保つことを表している。
-したがって、\coqin{bind},\coqin{while}を Parametric morphismとしてインスタンス化した。
+関数\coqin{bind}、 \coqin{while}が同値関係\coqin{wBisim}を保つことを表している。
+したがって、\coqin{bind}、\coqin{while}を Parametric morphismとしてインスタンス化した。
 定義の中に現れる\\
-\coqin{(pointwise_relation A (@wBisim M B))}とは関数の関係であって、
-任意の値に対して関数が同じ同値類の値を返すことを表す。
+任意の値に対して関数が同じ同値類の値を返すことを表す
+\coqin{(pointwise_relation A (@wBisim M B))}を用いて関数の間の関係を定義する。
 これにより、図1,2のような書き換えが可能になる。
 さらに、\coqin{setoid_rewrite}を用いることで、束縛変数
 を含む項に関する書き換えが可能である。このこととついては、5.3節で具体的に説明する。
@@ -379,7 +377,7 @@ Add Parametric Morphism A B : bind
   with signature (pointwise_relation A (@wBisim M (B + A))) ==>
     @eq A ==> (@wBisim M B ) as whilemor.
   \end{minted}
-これにより、Monaeを用いた他の検証と同様なrewrite tacticsを中心とした証明が可能になった。
+これにより、Monaeを用いた他の検証と同様なrewriteタクティックスを中心とした証明が可能になった。
 \begin{figure}[h]
   \centering
   \begin{minipage}{0.38\textwidth}
@@ -461,11 +459,10 @@ $m \leq 101$の時、必ず91を返すという性質をもつマッカーシー
 let rec mc91 m = if 100 < m then m - 10 else mc91 (mc91 (m+11))
    \end{minted}
 
-$m \leq 100$の時、11足した値で二重に再帰するため、停止性がCoqでは直ちに
-判定できない関数である。\\
+$m \leq 100$の時、11足した値で二重に再帰するため、構造的ではない再帰関数である。\\
 したがって、mc91関数をdelayモナドを用いて表し、自然数$m \leq 100$について
 91が戻り値となることを示した。\\
-まず、\coqin{while}オペレーターを用いてmc91関数を用いて表す。残っている再帰の深さn、mが計算している値である。
+まず、\coqin{while}オペレーターを用いてmc91関数を用いて表す。nが残っている再帰の深さ、mが計算している値である。
 
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 Let mc91_body nm :=
@@ -478,14 +475,14 @@ Let mc91_body nm :=
 Let mc91 n m := while mc91_body (n.+1, m).
     \end{minted}
 
-mc91関数が91を返すことを示す際、本質的な性質は、補題\coqin{mc91succE}である。
+mc91関数が91を返すことを示す際、本質的な性質は、次の補題\coqin{mc91succE}である。
 この補題と、\coqin{mc91 n 101 |$\approx$| Ret 91}であることと、$ k =  90 - m $に関する帰納法により従う。
 
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em, escapeinside=||]{ssr}
 Lemma mc91succE n m : 90 <= m < 101 -> mc91 n m |\scalebox{0.8}{$\approx$}| mc91 n (m.+1).
 \end{minted}
 
-さて、この補題を図1のように示した。
+さて、この補題を図3のように示した。
 
 \begin{figure}[H]
   \centering
@@ -516,16 +513,16 @@ mc91 n m
 
 \section{型付きストアモナドとの組み合わせ}
 
-Delayモナドのインターフェイスを定義することで、一般再帰関数に対する検証が可能になった。
-この手法をより多くの関数へ適用するためには、Delayモナドを他のモナドと組み合わせることにより
+遅延モナドのインターフェイスを定義することで、一般再帰関数に対する検証が可能になった。
+この手法をより多くの関数へ適用するためには、遅延モナドを他のモナドと組み合わせることにより
 複雑な副作用を表現する必要がある。そこで、\cite{practicalformalizationmonadicequational}
 において導入された型付きストアモナドとの組み合わせたdelayTypedstoremonadを定義した。
 
 \subsection{型付きストアモナド}
-型付きストアモナドは、Coqgen\cite{ValidatingOS}により変換したコードの、
-referenceを表すために導入された。\\
+Coqgen\cite{ValidatingOS}により変換したコードの、
+参照を表すために導入されたモナドが型付きストアモナドである。\\
 型と値のレコードbindingのリストを状態として使うことで、型付きストアを表している。\\
-また参照を扱うためのoperatorである\coqin{cnew}, \coqin{cget}, \coqin{cput}を持つ。
+また参照を扱うためのオペレーターである\coqin{cnew}、 \coqin{cget}、 \coqin{cput}を持つ。
 
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 Record binding :=
@@ -533,7 +530,7 @@ Record binding :=
    \end{minted}
 本研究では、型付きストアモナドを、例外モナドトランスフォーマー\coqin{MX}と
 状態モナドトランスフォーマー\coqin{MS}の合成で定義された型付きストアモナドトランスフォーマーに
-変更し、それぞれのモナドトランスフォーマーがDelayモナドの構造を保つことを示すことで、
+変更し、それぞれのモナドトランスフォーマーが遅延モナドの構造を保つことを示すことで、
 delay\_typed\_storemonadを定義した。
 \begin{center}
 
@@ -553,7 +550,7 @@ Let retS := fun A => curry Ret.
 Let bindS m f := fun s => m s >>= uncurry f.
 Let liftS m := fun s => m >>= (fun x => Ret (x, s)).
         \end{minted}
-さて、stateTにより状態モナドと組み合わせるためには、delayモナドがstateTで変換後、delayモナドであることを示す
+さて、stateTにより状態モナドと組み合わせるためには、遅延モナドがstateTで変換後、遅延モナドであることを示す
 必要がある。そこで、\cite{PIROG2013309}を参考に次のように\coqin{whileDS}と\coqin{wBisimDS}を定義した。
 関数\coqin{dist1}は、分配法則を表し、型を合わせるために定義した。
 \iffalse
@@ -586,7 +583,7 @@ Let retX : idfun --> MX := fun X x => Ret (inr x).
 Let bindX t f :=
   t >>= fun c => match c with inl z => Ret (inl z) | inr x => f x end.
         \end{minted}
-stateTの場合と同様に、delayモナドがexceptTで変換後delayモナドであることを示す必要がある。
+stateTの場合と同様に、遅延モナドがexceptTで変換後遅延モナドであることを示す必要がある。
 そこで、次のように定義した。
 関数\coqin{DEA}を合成することでにより、エラーが発生した際\coqin{inl (inl u)}を返すことで、繰り返しを終了する。
 
@@ -599,8 +596,8 @@ Let wBisimDE (d1 d2 : DE A) := wBisim d1 d2.
 
 \subsection{検証の具合例}
 \coqin{M : delay_typed_storemonad}を用いることで、参照に関する
-操作とwhileを用いた繰り返しを含むプログラムを表現可能である。\\
-例えば、参照とwhile文を用いて階乗を計算するプログラム\coqin{factdts}を以下のように定義できる。
+計算とwhileを用いた繰り返しを含むプログラムを表現可能である。\\
+例えば、参照と繰り返しを用いて階乗を計算するプログラム\coqin{factdts}を以下のように定義できる。
 \begin{minted}[bgcolor=bg,numbers=left,xleftmargin=1.5em]{ssr}
 Let factdts_aux_body r n : M (unit + nat) :=
   do v <- cget r;
@@ -625,7 +622,7 @@ Let factn n := do r <- cnew ml_int (fact n);
 ここでは、\coqin{factdts}の\coqin{while}を用いた部分\coqin{fact_aux}が\coqin{fact}を用いた形に書き換えられることについて
 取り上げる。この書き換えと、型付きストアモナドの等式を用いることで、\coqin{factn}に一致することが従う。
 証明はnに関する帰納法により図4,5のように行った。\\
-\coqin{under}タクティックを用いることで、bindに関する束縛変数を含む項に関する等式
+\coqin{under}タクティックを用いることで、bindに関する束縛変数を含む項に関する等式変形
 を行っている。
 
 \begin{figure}[H]
@@ -650,7 +647,7 @@ cget r >>= (fun s => cput r (1 * s) >> Ret tt)
 n = n' + 1の時の証明の際、\coqin{setoid_rewrite IH}の部分では、
 束縛変数を含む項に対する\coqin{wBisim}に関する等価性変形を行っている。これは、
 第2.5節で説明したように、bindをパラメトリックモルフィズムとして、インスタンス化
-しているため、行うことができる。
+しているため行うことができる。
 
 \begin{figure}[H]
   \centering
@@ -729,7 +726,7 @@ Complete elgot monadに関する理論的研究としては、SergeyとPirógら
 Simpsonらは、はiteration theoryの公理が完全であることを示している\cite{cacmfpo}。
 
 \section{まとめと今後の課題}
-本研究により、Delayモナドを通じてMonaeで一般再帰関数を扱うことができるようになった。
+本研究により、遅延モナドを通じてMonaeで一般再帰関数を扱うことができるようになった。
 次に、モナドトランスフォーマーを用いて、状態変化や例外処理といった計算効果を含む一般再帰関数
 をMonaeで扱うことができるようになった。
 最後にSetoidライブラリを用いることで、等価関係に基づく変形による検証を
@@ -738,29 +735,27 @@ rewrite タクティクスを中心とした証明により行うことができ
 
 今後の課題としては以下である。
 %let rec f p =を基準にしたインターフェイスの定義については触れる？
-\begin{enumerate}
-  \item プログラムの部分正当性の検証\\
-        現在、プログラムの実行後の状態について検証するには、factauxEの証明で行ったように
-        整礎関係を見つけ出し、その関係に関する帰納法を行う必要がある。
-        つまり、実質的にプログラムの停止性を示す必要があり、ホーア論理で行うようなループ不変条件を用いた
-        検証を行うことができない。したがって、ループ不変条件を用いた部分正当性の検証を
-        どのように等式変形の枠組みで導入するかが課題である。
-\end{enumerate}
+\paragraph{プログラムの部分正当性の検証}
+現在、プログラムの実行後の状態について検証するには、factauxEの証明で行ったように
+整礎関係を見つけ出し、その関係に関する帰納法を行う必要がある。
+つまり、実質的にプログラムの停止性を示す必要があり、ホーア論理で行うようなループ不変条件を用いた
+検証を行うことができない。したがって、ループ不変条件を用いた部分正当性の検証を
+どのように等式変形の枠組みで導入するかが課題である。
+
 
 また、今後の展望としては以下である。
-\begin{enumerate}
-  \item 確率モナドとの組み合わせ\\
-        今回の研究では、モナドトランスフォーマーによるモナドの組み合わせを行った。
-        一方、確率モナドはモナドトランスフォーマーによる組み合わせが難しいことが知られている。%文献は？
-        Monaeでは、インターフェイスに異なるモナドのオペレーターとその間の等式を
-        追加することで、確率モナドと非決定性モナドの組み合わせを行っている。遅延モナドに対して
-        も同様の手法で組み合わせることで多様な検証が可能になると考えている。
-  \item 一般的な双模倣性に関するMonaeでの検証\\
-        今回の研究で用いた計算的同値性は、Delay A上の弱双模倣性を満たす関係である。
-        一方、一般的な双模倣性に関する性質を持つモナドのインターフェイスを定義し、
-        その健全性を示すことで、並行プログラムやStreamなどの無限の長さも持ちうる
-        データを扱うプログラムに関する検証が期待できる。
-\end{enumerate}
+\paragraph{確率モナドとの組み合わせ}
+今回の研究では、モナドトランスフォーマーによるモナドの組み合わせを行った。
+一方、確率モナドはモナドトランスフォーマーによる組み合わせが難しいことが知られている。%文献は？
+Monaeでは、インターフェイスに異なるモナドのオペレーターとその間の等式を
+追加することで、確率モナドと非決定性モナドの組み合わせを行っている。遅延モナドに対して
+も同様の手法で組み合わせることで多様な検証が可能になると考えている。
+\paragraph{一般的な双模倣性に関するMonaeでの検証}
+今回の研究で用いた計算的同値性は、Delay A上の弱双模倣性を満たす関係である。
+一方、一般的な双模倣性に関する性質を持つモナドのインターフェイスを定義し、
+その健全性を示すことで、並行プログラムやStreamなどの無限の長さも持ちうる
+データを扱うプログラムに関する検証が期待できる。
+
 
 \bibliographystyle{alpha}
 \bibliography{reference.bib}
